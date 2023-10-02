@@ -1,0 +1,21 @@
+{
+  "div": {
+    "style": {
+      "border": "5px solid white",
+      "height": "calc( 100vh - 10px )",
+      "width": "calc( 100vw - 10px )"
+    },
+    "div": {
+      "style": {
+        "border": "1px solid red"
+      },
+      "text": "hello!!",
+      "div": {
+        "style": {
+          "border": "1px solid red"
+        },
+        "text": "hello2!!"
+      }
+    }
+  }
+}
