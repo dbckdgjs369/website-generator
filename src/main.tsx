@@ -5,17 +5,20 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom"; //🤔
 
 import "./index.css";
 import Router from "./Router";
+import { GlobalEventEmitterProvider } from "./GlobalEventEmitterContext";
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <React.StrictMode>
-    <RouterProvider
-      router={createBrowserRouter([
-        {
-          id: "MainRouter",
-          path: "*",
-          element: <Router />,
-        },
-      ])}
-    />
+    <GlobalEventEmitterProvider>
+      <RouterProvider
+        router={createBrowserRouter([
+          {
+            id: "MainRouter",
+            path: "*",
+            element: <Router />,
+          },
+        ])}
+      />
+    </GlobalEventEmitterProvider>
   </React.StrictMode>
 );

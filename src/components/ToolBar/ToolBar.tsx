@@ -1,19 +1,18 @@
 import * as S from "./emotion";
+import { useGlobalEventEmitter } from "../../GlobalEventEmitterContext";
 
-interface ToolBarInterface {
-  handleClick?: (ev: React.MouseEvent<HTMLButtonElement>) => void;
-}
-
-export default function ToolBar({ handleClick }: ToolBarInterface) {
-  // const handleButton = (ev: React.MouseEvent<HTMLButtonElement>) => {
-  //   console.log("ev", ev.currentTarget.id);
-  // };
+export default function ToolBar() {
+  const globalEmitter = useGlobalEventEmitter();
+  const handleButton = (ev: React.MouseEvent<HTMLButtonElement>) => {
+    globalEmitter.emit("click", ev.currentTarget.id);
+    console.log("here");
+  };
   return (
     <S.ToolBarWrapper>
-      <button onClick={handleClick} id="div">
+      <button onClick={handleButton} id="div">
         div
       </button>
-      <button onClick={handleClick} id="button">
+      <button onClick={handleButton} id="button">
         button
       </button>
     </S.ToolBarWrapper>
