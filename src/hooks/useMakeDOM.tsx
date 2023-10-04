@@ -19,10 +19,16 @@ export type ElementTagType = {
 
 export default function useMakeDOM() {
   const rootRef = useRef<HTMLElement>(null);
+  const removeChildElements = (divElement: HTMLElement) => {
+    if (divElement) {
+      while (divElement.firstChild) {
+        divElement.removeChild(divElement.firstChild);
+      }
+    }
+  };
 
   function jsonToHtml(json: ElementTagType, ref: HTMLElement) {
-    let html = "";
-    ref;
+    removeChildElements(ref);
     for (const tag in json) {
       switch (tag) {
         case "id": {
@@ -31,7 +37,6 @@ export default function useMakeDOM() {
         }
         case "text": {
           ref.textContent = json[tag] as string;
-          html += json[tag];
           break;
         }
         case "style": {
@@ -46,21 +51,31 @@ export default function useMakeDOM() {
         }
 
         default: {
-          const elementRef = document.createElement(tag);
-          ref.appendChild(elementRef);
           const otherValueArray = json[tag as HTMLTag] as ElementTagType[];
           otherValueArray.forEach((element) => {
+            const elementRef = document.createElement(tag);
+            ref.appendChild(elementRef);
             jsonToHtml(element, elementRef);
           });
           break;
         }
       }
     }
-    return html;
   }
   function add(target: HTMLElement, dom: HTMLElement) {
     target.appendChild(dom);
   }
 
-  return { rootRef, jsonToHtml, add };
+  const generateRandomString = (num: number) => {
+    const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+    let result = "";
+    const charactersLength = characters.length;
+    for (let i = 0; i < num; i++) {
+      result += characters.charAt(Math.floor(Math.random() * charactersLength));
+    }
+
+    return result;
+  };
+
+  return { rootRef, jsonToHtml, add, generateRandomString };
 }
