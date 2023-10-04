@@ -1,21 +1,26 @@
 {
-  "div": {
-    "style": {
-      "border": "5px solid white",
-      "height": "calc( 100vh - 10px )",
-      "width": "calc( 100vw - 10px )"
-    },
-    "div": {
+  "div": [
+    {
       "style": {
-        "border": "1px solid red"
+        "border": "5px solid white",
+        "height": "calc( 100vh - 10px )",
+        "width": "calc( 100vw - 10px )"
       },
-      "text": "hello!!",
       "div": {
         "style": {
           "border": "1px solid red"
         },
-        "text": "hello2!!"
+        "text": "hello!!",
+        "div": {
+          "style": {
+            "border": "1px solid red"
+          },
+          "text": "hello2!!"
+        }
       }
+    },
+    {
+      "style": {}
     }
-  }
+  ]
 }

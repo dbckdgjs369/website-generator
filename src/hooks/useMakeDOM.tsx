@@ -1,4 +1,4 @@
-import { CSSProperties } from "react";
+import { CSSProperties, useRef } from "react";
 
 export type HTMLTag = keyof HTMLElementTagNameMap;
 type StringKeyStringValueObject = {
@@ -17,39 +17,40 @@ export type ElementTagType = {
     : ElementTagType[];
 };
 
-export default function useParse() {
-  // const [text, setText] = useState({
-  //   __html: "",
-  // });
+export default function useMakeDOM() {
+  const rootRef = useRef<HTMLElement>(null);
 
-  function jsonToHtml(json: ElementTagType) {
+  function jsonToHtml(json: ElementTagType, ref: HTMLElement) {
     let html = "";
+    ref;
     for (const tag in json) {
       switch (tag) {
         case "id": {
-          html += `id="${json[tag]}"`;
+          ref.setAttribute("id", json[tag] as string);
           break;
         }
         case "text": {
+          ref.textContent = json[tag] as string;
           html += json[tag];
           break;
         }
         case "style": {
           const styles = json[tag] as CSSProperties;
-          let styleString = "";
+          if (ref === null) return;
           for (const styleKey in styles) {
-            styleString += `${styleKey}: ${
-              styles[styleKey as keyof CSSProperties]
-            };`;
+            ref.style[styleKey as never] = styles[
+              styleKey as keyof CSSProperties
+            ] as string;
           }
-          html += `style="${styleString}">`;
           break;
         }
 
         default: {
+          const elementRef = document.createElement(tag);
+          ref.appendChild(elementRef);
           const otherValueArray = json[tag as HTMLTag] as ElementTagType[];
           otherValueArray.forEach((element) => {
-            html += `<${tag} ${jsonToHtml(element)}</${tag}>`;
+            jsonToHtml(element, elementRef);
           });
           break;
         }
@@ -57,12 +58,9 @@ export default function useParse() {
     }
     return html;
   }
+  function add(target: HTMLElement, dom: HTMLElement) {
+    target.appendChild(dom);
+  }
 
-  // useEffect(() => {
-  //   console.log("JSON", jsonToHtml(temp));
-  //   setText({ __html: jsonToHtml(temp as Element) });
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, []);
-  // return <body dangerouslySetInnerHTML={text as { __html: string }} />;
-  return { jsonToHtml };
+  return { rootRef, jsonToHtml, add };
 }

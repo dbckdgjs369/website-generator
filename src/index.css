@@ -122,3 +122,13 @@ table {
   border-collapse: collapse;
   border-spacing: 0;
 }
+
+#test:focus {
+  background: yellow;
+  color: red;
+}
+
+div:focus {
+  background: yellow;
+  color: red;
+}

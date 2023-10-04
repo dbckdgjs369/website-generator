@@ -3,13 +3,16 @@ import { useGlobalEventEmitter } from "../../GlobalEventEmitterContext";
 
 export default function ToolBar() {
   const globalEmitter = useGlobalEventEmitter();
+
   const handleButton = (ev: React.MouseEvent<HTMLButtonElement>) => {
+    ev.preventDefault();
     globalEmitter.emit("click", ev.currentTarget.id);
-    console.log("here");
+    globalEmitter.removeAllListeners();
   };
+
   return (
     <S.ToolBarWrapper>
-      <button onClick={handleButton} id="div">
+      <button onClick={(ev) => handleButton(ev)} id="div">
         div
       </button>
       <button onClick={handleButton} id="button">
