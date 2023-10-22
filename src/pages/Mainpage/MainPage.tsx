@@ -4,6 +4,13 @@ import { ElementTagType, HTMLTag } from "../../hooks/useParse";
 import useMakeDOM from "../../hooks/useMakeDOM";
 import testData from "../../assets/test.json";
 
+const DEFAULT_STYLE = {
+  display: "flex",
+  border: "1px solid black",
+  width: "100%",
+  fontSize: "30px",
+};
+
 export default function MainPage() {
   const [selectedID, setSelectedID] = useState("init");
   const divRef = useRef<HTMLDivElement>(null);
@@ -11,28 +18,26 @@ export default function MainPage() {
     div: [
       {
         id: "init",
-        style: {
-          display: "flex",
-          flexDirection: "column",
-          border: "1px solid black",
-          fontSize: "40px",
-        },
+        style: { ...DEFAULT_STYLE, flexDirection: "column" },
       },
     ],
   });
   const { jsonToHtml, generateRandomString } = useMakeDOM();
   const globalEmitter = useGlobalEventEmitter();
-  const addAttributeToElement = () => {};
+  const handleAddStyle = (style: string) => {
+    console.log("style", style);
+    // 추후 구현
+  };
 
   const handleAddElement = (name: HTMLTag) => {
-    console.log("selected in emiiter", selectedID);
     addElement(name, selectedID);
   };
   useEffect(() => {
-    console.log("selectedID", selectedID);
     globalEmitter.on("click", handleAddElement);
+    globalEmitter.on("style", handleAddStyle);
     return () => {
       globalEmitter.off("click", handleAddElement);
+      globalEmitter.off("click", handleAddStyle);
     };
   }, [selectedID, json]);
 
@@ -74,49 +79,25 @@ export default function MainPage() {
     }
   }
 
-  // useEffect(() => {
-  //   const temp = getObjectById("fgehQpPqXh", testData as ElementTagType);
-  //   console.log("asldkgjaslkdgj", temp);
-  // }, []);
-  useEffect(() => {
-    console.log("selected", selectedID);
-  }, [selectedID]);
-
   const addElement = (addObjectTag: HTMLTag, targetObjectID: string) => {
     const updatedJsonData = { ...json };
     const foundObject = getObjectById(targetObjectID, updatedJsonData);
-    console.log("foundObject", targetObjectID, foundObject, updatedJsonData);
     if (!foundObject) return;
     if (foundObject[addObjectTag]) {
       (foundObject[addObjectTag] as ElementTagType[]).push({
         id: generateRandomString(10),
-        style: {
-          display: "flex",
-          // flexDirection: "column",
-          border: "1px solid black",
-          // height: "30px",
-          width: "100%",
-          fontSize: "40px",
-        },
-        text: "1",
+        style: DEFAULT_STYLE,
+        text: addObjectTag,
       });
     } else {
       (foundObject[addObjectTag]! as ElementTagType[]) = [
         {
           id: generateRandomString(10),
-          style: {
-            display: "flex",
-            // flexDirection: "column",
-            border: "1px solid black",
-            // height: "30px",
-            width: "100%",
-            fontSize: "40px",
-          },
-          text: "2",
+          style: DEFAULT_STYLE,
+          text: addObjectTag,
         },
       ];
     }
-    console.log("update", updatedJsonData);
     setJson(updatedJsonData);
   };
 
