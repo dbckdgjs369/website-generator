@@ -4,129 +4,129 @@ import { ElementTagType, HTMLTag } from "../../hooks/useParse";
 import useMakeDOM from "../../hooks/useMakeDOM";
 import testData from "../../assets/test.json";
 
-const kebabCase = "fooBar1ShowBaz2".replace(/([A-Z0-9])/g, "-$1").toLowerCase();
-
-const cssCustomPropertySyntax = `--${kebabCase}`;
-
-console.log({ kebabCase, cssCustomPropertySyntax });
-
 export default function MainPage() {
+  const [selectedID, setSelectedID] = useState("init");
   const divRef = useRef<HTMLDivElement>(null);
-  const [json, setJson] = useState<ElementTagType>();
+  const [json, setJson] = useState<ElementTagType>({
+    div: [
+      {
+        id: "init",
+        style: {
+          display: "flex",
+          flexDirection: "column",
+          border: "1px solid black",
+          fontSize: "40px",
+        },
+      },
+    ],
+  });
   const { jsonToHtml, generateRandomString } = useMakeDOM();
   const globalEmitter = useGlobalEventEmitter();
-  globalEmitter.on("click", (name: HTMLTag) => {
+  const addAttributeToElement = () => {};
+
+  const handleAddElement = (name: HTMLTag) => {
+    console.log("selected in emiiter", selectedID);
+    addElement(name, selectedID);
+  };
+  useEffect(() => {
+    console.log("selectedID", selectedID);
+    globalEmitter.on("click", handleAddElement);
+    return () => {
+      globalEmitter.off("click", handleAddElement);
+    };
+  }, [selectedID, json]);
+
+  useEffect(() => {
+    // 바뀐 json을 렌더해주는 부분
+    jsonToHtml(json!, divRef.current as HTMLElement);
+  }, [json, jsonToHtml]);
+
+  function getObjectById(
+    id: string,
+    data: ElementTagType
+  ): ElementTagType | undefined {
+    for (const key in data) {
+      switch (key) {
+        case "id": {
+          break;
+        }
+        case "style": {
+          break;
+        }
+        case "text": {
+          break;
+        }
+        default: {
+          const temp = data[key as HTMLTag] as ElementTagType[];
+          for (const element of temp) {
+            if (element.id === id) {
+              console.log("match!!", element);
+              return element;
+            } else {
+              const result = getObjectById(id, element);
+              if (result) {
+                return result; // Return the result of the recursive call
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  // useEffect(() => {
+  //   const temp = getObjectById("fgehQpPqXh", testData as ElementTagType);
+  //   console.log("asldkgjaslkdgj", temp);
+  // }, []);
+  useEffect(() => {
+    console.log("selected", selectedID);
+  }, [selectedID]);
+
+  const addElement = (addObjectTag: HTMLTag, targetObjectID: string) => {
     const updatedJsonData = { ...json };
-    if (updatedJsonData[name]) {
-      (updatedJsonData[name] as ElementTagType[]).push({
+    const foundObject = getObjectById(targetObjectID, updatedJsonData);
+    console.log("foundObject", targetObjectID, foundObject, updatedJsonData);
+    if (!foundObject) return;
+    if (foundObject[addObjectTag]) {
+      (foundObject[addObjectTag] as ElementTagType[]).push({
         id: generateRandomString(10),
         style: {
           display: "flex",
+          // flexDirection: "column",
           border: "1px solid black",
-          height: "50px",
+          // height: "30px",
+          width: "100%",
           fontSize: "40px",
         },
         text: "1",
       });
     } else {
-      (updatedJsonData[name] as ElementTagType[]) = [
+      (foundObject[addObjectTag]! as ElementTagType[]) = [
         {
           id: generateRandomString(10),
           style: {
             display: "flex",
+            // flexDirection: "column",
             border: "1px solid black",
-            height: "50px",
+            // height: "30px",
+            width: "100%",
             fontSize: "40px",
           },
           text: "2",
         },
       ];
     }
+    console.log("update", updatedJsonData);
     setJson(updatedJsonData);
-    // jsonToHtml(updatedJsonData, divRef.current as HTMLElement);
-  });
-  const removeChildElements = () => {
-    const divElement = divRef.current;
-    if (divElement) {
-      while (divElement.firstChild) {
-        divElement.removeChild(divElement.firstChild);
-      }
-    }
   };
-  useEffect(() => {
-    console.log("json", json);
-    jsonToHtml(json!, divRef.current as HTMLElement);
-    // return () => {
-    //   removeChildElements();
-    // };
-  }, [json]);
-  // useEffect(() => {
-  //   console.log("testDat", testData);
-  //   jsonToHtml(testData, divRef.current as HTMLElement);
-  // }, []);
-
-  function findObjectById(id: string, jsonObj: ElementTagType) {
-    for (const key in jsonObj) {
-      if (Object.hasOwnProperty.call(jsonObj, key)) {
-        const items = jsonObj[key];
-        for (const item of items) {
-          if (item.id === id) {
-            return item;
-          }
-        }
-      }
-    }
-    return null; // ID에 해당하는 객체를 찾지 못한 경우
-  }
 
   const getID = (ev: React.MouseEvent<HTMLDivElement>) => {
-    // const newData = { ...json };
-    const updatedJsonData = { ...json };
     if (ev.target instanceof Element) {
-      //   console.log(ev.target.id);
-      const foundObject = findObjectById(ev.target.id, updatedJsonData!);
-      //   (foundObject.div = [
-      //     {
-      //       id: generateRandomString(10),
-      //       style: {
-      //         border: "1px solid blue",
-      //         height: "50px",
-      //         fontSize: "40px",
-      //       },
-      //       text: "new Div",
-      //     },
-      //   ]),
-      //     console.log("foundOjbect", foundObject);
-      // }
-      // setJson(newData);
-      if (foundObject["div"]) {
-        (foundObject["div"] as ElementTagType[]).push({
-          id: generateRandomString(10),
-          style: {
-            border: "1px solid black",
-            height: "30px",
-            width: "50px",
-            fontSize: "40px",
-          },
-          text: "1",
-        });
-      } else {
-        (foundObject["div"]! as ElementTagType[]) = [
-          {
-            id: generateRandomString(10),
-            style: {
-              border: "1px solid black",
-              height: "30px",
-              width: "50px",
-              fontSize: "40px",
-            },
-            text: "2",
-          },
-        ];
-      }
-      console.log("foundObject", foundObject);
+      setSelectedID(ev.target.id);
     }
-    setJson(updatedJsonData);
   };
-  return <div ref={divRef} onClick={getID} />;
+
+  return (
+    <div id="init" ref={divRef} onClick={getID} style={{ height: "100vh" }} />
+  );
 }
