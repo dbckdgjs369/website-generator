@@ -40,5 +40,17 @@
       },
       "text": "1"
     }
+  ],
+  "button": [
+    {
+      "id": "PnzuBHXKGQ2",
+      "style": {
+        "display": "flex",
+        "border": "1px solid black",
+        "height": "50px",
+        "fontSize": "40px"
+      },
+      "text": "1"
+    }
   ]
 }

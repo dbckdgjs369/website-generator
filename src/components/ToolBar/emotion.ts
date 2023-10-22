@@ -11,3 +11,12 @@ export const CurrentWrapper = styled.div`
   width: 100%;
   flex-direction: column;
 `;
+
+export const ButtonWrapper = styled.div`
+  display: flex;
+  width: 100%;
+`;
+
+export const Button = styled.button`
+  flex: 1;
+`;
