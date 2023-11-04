@@ -1,0 +1,97 @@
+{
+  "div": [
+    {
+      "header": [
+        {
+          "style": {
+            "position": "relative",
+            "display": "flex",
+            "alignItems": "center",
+            "justifyContent": "space-between",
+            "padding": "0 32px",
+            "height": "56px",
+            "backgroundColor": "#fff",
+            "boxShadow": "0 2px 4px 0 rgba(0, 0, 0, 0.1)"
+          },
+          "img": [
+            {
+              "style": {
+                "height": "28px"
+              }
+            }
+          ],
+          "div": [
+            {
+              "style": {
+                "position": "absolute",
+                "top": "50%",
+                "left": "50%",
+                "transform": "translate(-50%, -50%)"
+              },
+              "form": [
+                {
+                  "style": {
+                    "borderRadius": "8px",
+                    "border": "1px solid #6358EE",
+                    "padding": "0 10px 0 18px",
+                    "width": "440px",
+                    "height": "36px",
+                    "display": "flex",
+                    "alignItems": "center",
+                    "justifyContent": "space-between"
+                  },
+                  "input": [
+                    {
+                      "style": {
+                        "border": "none",
+                        "height": "100%",
+                        "width": "100%",
+                        "outline": "none"
+                      }
+                    }
+                  ],
+                  "button": [
+                    {
+                      "style": {
+                        "outline": "none",
+                        "border": "none",
+                        "backgroundColor": "transparent",
+                        "cursor": "pointer",
+
+                        ":focus": {
+                          "outline": "none"
+                        }
+                      }
+                    }
+                  ],
+                  "img": [{}]
+                }
+              ]
+            },
+            {
+              "style": { "display": "flex", "gap": "12px" },
+              "button": [
+                {
+                  "style": {
+                    "color": "#fff",
+                    "fontWeight": 700,
+                    "backgroundColor": "#6358EE"
+                  },
+                  "text": "회원가입"
+                },
+                {
+                  "style": {
+                    "color": "#fff",
+                    "fontWeight": 700,
+                    "backgroundColor": "#6358EE"
+                  },
+                  "text": "로그인"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
