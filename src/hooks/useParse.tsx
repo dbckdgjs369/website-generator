@@ -18,10 +18,6 @@ export type ElementTagType = {
 };
 
 export default function useParse() {
-  // const [text, setText] = useState({
-  //   __html: "",
-  // });
-
   function jsonToHtml(json: ElementTagType) {
     let html = "";
     for (const tag in json) {
@@ -58,11 +54,5 @@ export default function useParse() {
     return html;
   }
 
-  // useEffect(() => {
-  //   console.log("JSON", jsonToHtml(temp));
-  //   setText({ __html: jsonToHtml(temp as Element) });
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, []);
-  // return <body dangerouslySetInnerHTML={text as { __html: string }} />;
   return { jsonToHtml };
 }

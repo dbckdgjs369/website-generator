@@ -8,7 +8,6 @@ export const Wrapper = styled.div`
 
 export const MainView = styled.div`
   width: 85%;
-  border: 1px solid red;
 `;
 
 export const ToolBaWrapper = styled.div`

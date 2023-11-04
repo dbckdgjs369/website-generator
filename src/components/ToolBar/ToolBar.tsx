@@ -5,7 +5,7 @@ import { useRef } from "react";
 export default function ToolBar() {
   const globalEmitter = useGlobalEventEmitter();
   const textareaRef = useRef<HTMLTextAreaElement>(null);
-  // 새로 생성된 div에 emitter가 중첩되는 문제발생
+
   const handleButton = (ev: React.MouseEvent<HTMLButtonElement>) => {
     ev.preventDefault();
     globalEmitter.emit("click", ev.currentTarget.id);
