@@ -12,6 +12,13 @@ export interface ElementStructure {
 export default function useRender() {
   function createHTMLElement(elementData: ElementStructure): HTMLElement {
     const element = document.createElement(elementData.type);
+    if (elementData.inner) {
+      elementData.inner.forEach((innerElementData) => {
+        const innerElement = createHTMLElement(innerElementData);
+        element.appendChild(innerElement);
+      });
+      return element;
+    }
 
     element.id = elementData.id;
 
@@ -28,20 +35,16 @@ export default function useRender() {
     if (elementData.text) {
       element.textContent = elementData.text;
     }
-
-    if (elementData.inner) {
-      elementData.inner.forEach((innerElementData) => {
-        const innerElement = createHTMLElement(innerElementData);
-        element.appendChild(innerElement);
-      });
-    }
+    element.addEventListener("click", (e) => e.stopPropagation());
 
     return element;
   }
 
   function parseElementsToHTML(elements: ElementStructure[]): void {
     const container = document.getElementById("init");
-
+    while (container?.firstChild) {
+      container.removeChild(container.firstChild);
+    }
     if (container) {
       elements.forEach((elementData) => {
         const element = createHTMLElement(elementData);
@@ -49,5 +52,6 @@ export default function useRender() {
       });
     }
   }
+
   return { parseElementsToHTML };
 }

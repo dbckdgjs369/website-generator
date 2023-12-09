@@ -1,11 +1,11 @@
 import { useEffect, useRef, useState } from "react";
 import { useGlobalEventEmitter } from "../../GlobalEventEmitterContext";
-import { ElementTagType, HTMLTag } from "../../hooks/useParse";
+import { HTMLTag } from "../../hooks/useParse";
 import useMakeDOM from "../../hooks/useMakeDOM";
 // import testData from "../../assets/test.json";
 
 // import testData2 from "../../assets/test2.json";
-import { data } from "../../assets/testArray";
+// import { data } from "../../assets/testArray";
 import useRender, { ElementStructure } from "../../hooks/useRender";
 import useHandleStructure from "../../hooks/useHandleStructure";
 
@@ -16,26 +16,23 @@ const DEFAULT_STYLE = {
   fontSize: "30px",
 };
 
-const DEFAULT_STRUCTURE: ElementStructure = {
-  id: "1",
-  type: "div",
-  text: "dummy",
-  style: {
-    height: "10px",
-    width: "500px",
-    border: "1px solid",
-  },
-};
+// const DEFAULT_STRUCTURE: ElementStructure = {
+//   id: "1",
+//   type: "div",
+//   text: "dummy",
+//   style: {
+//     height: "10px",
+//     width: "500px",
+//     border: "1px solid",
+//   },
+// };
 
 export default function MainPage2() {
-  const [selectedID, setSelectedID] = useState("init");
+  const [selectedID, setSelectedID] = useState("first");
   const [pageData, setPageData] = useState<ElementStructure[]>([
     {
-      id: "init",
+      id: "first",
       type: "div",
-      style: {
-        ...DEFAULT_STYLE,
-      },
     },
   ]);
   const { parseElementsToHTML } = useRender();
@@ -47,6 +44,7 @@ export default function MainPage2() {
     addElement(name, selectedID);
   };
   const addElement = (addObjectTag: HTMLTag, targetObjectID: string) => {
+    // id를 가진 요소에 object Tag를 추가해줌
     const updatedPageData = [...pageData];
     const foundObject = getElementById(updatedPageData, targetObjectID);
     if (!foundObject) return;
@@ -70,25 +68,10 @@ export default function MainPage2() {
     setPageData(updatedPageData);
   };
 
-  function findAndAddButton(arr: ElementStructure[]): void {
-    for (const obj of arr) {
-      if (obj.id === "1") {
-        if (!obj.inner) {
-          obj.inner = [];
-        }
-        obj.inner.push({
-          type: "button",
-          id: generateRandomString(10),
-          text: "button",
-        });
-        return;
-      } else if (obj.inner) {
-        findAndAddButton(obj.inner);
-      }
-    }
-  }
   useEffect(() => {
     globalEmitter.on("click", handleAddElement);
+
+    console.log("click");
     return () => {
       globalEmitter.off("click", handleAddElement);
     };
@@ -99,19 +82,16 @@ export default function MainPage2() {
       setSelectedID(ev.target.id);
     }
   };
+
   useEffect(() => {
-    console.log("here");
+    console.log("here", pageData);
     // 바뀐 json을 렌더해주는 부분
-    // jsonToHtml(json!, divRef.current as HTMLElement);
-    // jsonToHtml(testData2, divRef.current as HTMLElement);
-    console.log("pageData", pageData);
-    console.log("getgetElementById", getElementById(data, "aa"));
     parseElementsToHTML(pageData);
-  }, [pageData, parseElementsToHTML]);
+  }, [pageData]);
 
   return (
     <div id="init" ref={divRef} onClick={getID} style={{ height: "100vh" }}>
-      <button onClick={() => findAndAddButton(data)}>Add</button>
+      <button onClick={() => setPageData([])}>reset</button>
     </div>
   );
 }
