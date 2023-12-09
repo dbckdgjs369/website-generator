@@ -53,7 +53,7 @@ export default function MainPage2() {
         id: generateRandomString(10),
         type: addObjectTag,
         style: DEFAULT_STYLE,
-        text: addObjectTag,
+        text: "asdgasg",
       });
     } else {
       foundObject.inner = [
@@ -61,10 +61,11 @@ export default function MainPage2() {
           id: generateRandomString(10),
           type: addObjectTag,
           style: DEFAULT_STYLE,
-          text: addObjectTag,
+          text: "asdg",
         },
       ];
     }
+    console.log("update", updatedPageData);
     setPageData(updatedPageData);
   };
 
@@ -79,7 +80,12 @@ export default function MainPage2() {
 
   const getID = (ev: React.MouseEvent<HTMLDivElement>) => {
     if (ev.target instanceof Element) {
-      setSelectedID(ev.target.id);
+      if (ev.target.id === "init") {
+        setSelectedID("first");
+      } else {
+        console.log(":::::::::ev", ev.target.id);
+        setSelectedID(ev.target.id);
+      }
     }
   };
 

@@ -12,13 +12,6 @@ export interface ElementStructure {
 export default function useRender() {
   function createHTMLElement(elementData: ElementStructure): HTMLElement {
     const element = document.createElement(elementData.type);
-    if (elementData.inner) {
-      elementData.inner.forEach((innerElementData) => {
-        const innerElement = createHTMLElement(innerElementData);
-        element.appendChild(innerElement);
-      });
-      return element;
-    }
 
     element.id = elementData.id;
 
@@ -35,8 +28,15 @@ export default function useRender() {
     if (elementData.text) {
       element.textContent = elementData.text;
     }
-    element.addEventListener("click", (e) => e.stopPropagation());
-
+    // element.addEventListener("click", (e) => e.stopPropagation());
+    console.log("::::::::recursive", element);
+    if (elementData.inner) {
+      elementData.inner.forEach((innerElementData) => {
+        const innerElement = createHTMLElement(innerElementData);
+        element.appendChild(innerElement);
+      });
+      // return element;
+    }
     return element;
   }
 
@@ -48,6 +48,7 @@ export default function useRender() {
     if (container) {
       elements.forEach((elementData) => {
         const element = createHTMLElement(elementData);
+        console.log(":::::::::::::element", element);
         container.appendChild(element);
       });
     }
