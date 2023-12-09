@@ -28,8 +28,6 @@ export default function useRender() {
     if (elementData.text) {
       element.textContent = elementData.text;
     }
-    // element.addEventListener("click", (e) => e.stopPropagation());
-    console.log("::::::::recursive", element);
     if (elementData.inner) {
       elementData.inner.forEach((innerElementData) => {
         const innerElement = createHTMLElement(innerElementData);
@@ -48,7 +46,6 @@ export default function useRender() {
     if (container) {
       elements.forEach((elementData) => {
         const element = createHTMLElement(elementData);
-        console.log(":::::::::::::element", element);
         container.appendChild(element);
       });
     }

@@ -11,6 +11,13 @@ export const data: ElementStructure[] = [
       {
         type: "div",
         id: "a",
+        inner: [
+          {
+            id: "aa",
+            type: "article",
+            text: "article",
+          },
+        ],
       },
     ],
   },
