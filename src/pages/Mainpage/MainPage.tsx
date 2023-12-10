@@ -2,7 +2,11 @@ import { useEffect, useRef, useState } from "react";
 import { useGlobalEventEmitter } from "../../GlobalEventEmitterContext";
 import { ElementTagType, HTMLTag } from "../../hooks/useParse";
 import useMakeDOM from "../../hooks/useMakeDOM";
-import testData from "../../assets/test.json";
+// import testData from "../../assets/test.json";
+
+// import testData2 from "../../assets/test2.json";
+import { data } from "../../assets/testArray";
+import useRender from "../../hooks/useRender";
 
 const DEFAULT_STYLE = {
   display: "flex",
@@ -13,6 +17,7 @@ const DEFAULT_STYLE = {
 
 export default function MainPage() {
   const [selectedID, setSelectedID] = useState("init");
+  const { parseElementsToHTML } = useRender();
   const divRef = useRef<HTMLDivElement>(null);
   const [json, setJson] = useState<ElementTagType>({
     div: [
@@ -43,8 +48,17 @@ export default function MainPage() {
 
   useEffect(() => {
     // 바뀐 json을 렌더해주는 부분
-    jsonToHtml(json!, divRef.current as HTMLElement);
+    // jsonToHtml(json!, divRef.current as HTMLElement);
+    // jsonToHtml(testData2, divRef.current as HTMLElement);
+    parseElementsToHTML(data);
   }, [json, jsonToHtml]);
+
+  useEffect(() => {
+    console.log("selected", selectedID);
+    addSelecetedStyle();
+  }, [selectedID]);
+
+  const addSelecetedStyle = () => {};
 
   function getObjectById(
     id: string,
