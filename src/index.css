@@ -122,3 +122,8 @@ table {
   border-collapse: collapse;
   border-spacing: 0;
 }
+
+.selected {
+  border: 2px dotted red !important;
+  outline: none;
+}

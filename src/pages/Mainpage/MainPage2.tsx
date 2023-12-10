@@ -2,10 +2,6 @@ import { useEffect, useRef, useState } from "react";
 import { useGlobalEventEmitter } from "../../GlobalEventEmitterContext";
 import { HTMLTag } from "../../hooks/useParse";
 import useMakeDOM from "../../hooks/useMakeDOM";
-// import testData from "../../assets/test.json";
-
-// import testData2 from "../../assets/test2.json";
-// import { data } from "../../assets/testArray";
 import useRender, { ElementStructure } from "../../hooks/useRender";
 import useHandleStructure from "../../hooks/useHandleStructure";
 
@@ -15,17 +11,6 @@ const DEFAULT_STYLE = {
   width: "100%",
   fontSize: "30px",
 };
-
-// const DEFAULT_STRUCTURE: ElementStructure = {
-//   id: "1",
-//   type: "div",
-//   text: "dummy",
-//   style: {
-//     height: "10px",
-//     width: "500px",
-//     border: "1px solid",
-//   },
-// };
 
 export default function MainPage2() {
   const [selectedID, setSelectedID] = useState("first");
@@ -83,14 +68,18 @@ export default function MainPage2() {
       if (ev.target.id === "init") {
         setSelectedID("first");
       } else {
-        console.log(":::::::::ev", ev.target.id);
-        setSelectedID(ev.target.id);
+        const id = ev.target.id;
+        const prevElement = document.getElementById(selectedID); // 만약에 점선 유지시키고 싶으면 json에 넣어서 이거 사용해야 됌
+        const selectedElement = document.getElementById(id);
+        if (!prevElement) return;
+        if (!selectedElement) return;
+        selectedElement?.setAttribute("class", "selected");
+        setSelectedID(id);
       }
     }
   };
 
   useEffect(() => {
-    console.log("here", pageData);
     // 바뀐 json을 렌더해주는 부분
     parseElementsToHTML(pageData);
   }, [pageData]);
