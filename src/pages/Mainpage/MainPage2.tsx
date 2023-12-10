@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useEffect, useRef, useState } from "react";
 import { useGlobalEventEmitter } from "../../GlobalEventEmitterContext";
 import { HTMLTag } from "../../hooks/useParse";
@@ -28,6 +30,33 @@ export default function MainPage2() {
   const handleAddElement = (name: HTMLTag) => {
     addElement(name, selectedID);
   };
+
+  const handleAddStyle = (style: any) => {
+    addStyle(selectedID, style);
+  };
+
+  const addStyle = (targetObjectID: string, newStyle: any) => {
+    const updatedPageData = [...pageData];
+    const foundObject = getElementById(updatedPageData, targetObjectID);
+    if (!foundObject) return;
+    const newStyleObject = {};
+    const styleArr = newStyle.split(";"); // TODO 줄바꿈 없애는 처리 필요
+    styleArr.forEach((style: string) => {
+      if (style.length === 0) return;
+      const row = style.split(":");
+      //@ts-ignore
+      aaa[row[0]] = row[1];
+    });
+    console.log("aaa", newStyleObject);
+    // const temp = JSON.parse(newStyle);
+    // console.log(":::::temp", temp);
+    if (foundObject.style) {
+      foundObject.style = { ...foundObject.style, ...newStyleObject };
+    } else {
+      foundObject.style = { ...newStyleObject };
+    }
+    setPageData(updatedPageData);
+  };
   const addElement = (addObjectTag: HTMLTag, targetObjectID: string) => {
     // id를 가진 요소에 object Tag를 추가해줌
     const updatedPageData = [...pageData];
@@ -56,10 +85,12 @@ export default function MainPage2() {
 
   useEffect(() => {
     globalEmitter.on("click", handleAddElement);
+    globalEmitter.on("style", handleAddStyle);
 
     console.log("click");
     return () => {
       globalEmitter.off("click", handleAddElement);
+      globalEmitter.off("style", handleAddStyle);
     };
   }, [pageData, selectedID]);
 
