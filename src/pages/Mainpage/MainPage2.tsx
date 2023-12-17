@@ -45,11 +45,8 @@ export default function MainPage2() {
       if (style.length === 0) return;
       const row = style.split(":");
       //@ts-ignore
-      aaa[row[0]] = row[1];
+      newStyleObject[row[0]] = row[1];
     });
-    console.log("aaa", newStyleObject);
-    // const temp = JSON.parse(newStyle);
-    // console.log(":::::temp", temp);
     if (foundObject.style) {
       foundObject.style = { ...foundObject.style, ...newStyleObject };
     } else {

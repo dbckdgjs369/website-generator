@@ -9,13 +9,11 @@ export default function ToolBar() {
   const handleButton = (ev: React.MouseEvent<HTMLButtonElement>) => {
     ev.preventDefault();
     globalEmitter.emit("click", ev.currentTarget.id);
-    globalEmitter.removeAllListeners();
   };
 
   const addStyle = (ev: React.MouseEvent<HTMLButtonElement>) => {
     ev.preventDefault();
     globalEmitter.emit("style", textareaRef.current?.value);
-    globalEmitter.removeAllListeners();
   };
 
   return (
@@ -28,7 +26,7 @@ export default function ToolBar() {
       </S.ButtonWrapper>
       <S.CurrentWrapper>
         <textarea ref={textareaRef} />
-        <button onClick={addStyle}>스타일 추가</button>
+        <button onClick={addStyle}>직접 스타일 추가</button>
       </S.CurrentWrapper>
       <button onClick={(ev) => handleButton(ev)} id="div">
         div
