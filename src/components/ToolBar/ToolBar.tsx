@@ -15,6 +15,10 @@ export default function ToolBar() {
     ev.preventDefault();
     globalEmitter.emit("style", textareaRef.current?.value);
   };
+  const handleFile = (ev: React.MouseEvent<HTMLButtonElement>) => {
+    ev.preventDefault();
+    globalEmitter.emit("file", textareaRef.current?.value);
+  };
 
   return (
     <S.ToolBarWrapper>
@@ -33,6 +37,15 @@ export default function ToolBar() {
       </button>
       <button onClick={handleButton} id="button">
         button
+      </button>
+      <button onClick={handleButton} id="delete">
+        save
+      </button>
+      <button onClick={handleFile} id="save">
+        save
+      </button>
+      <button onClick={handleFile} id="clear">
+        clear
       </button>
     </S.ToolBarWrapper>
   );
