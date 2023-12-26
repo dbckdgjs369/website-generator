@@ -40,7 +40,7 @@ export default function MainPage2() {
     const foundObject = getElementById(updatedPageData, targetObjectID);
     if (!foundObject) return;
     const newStyleObject = {};
-    const styleArr = newStyle.split(";"); // TODO 줄바꿈 없애는 처리 필요(Enter 넣어도 받을 수 ㅇ씨게)
+    const styleArr = newStyle.replace(/\r?\n|\r/g, "").split(";");
     styleArr.forEach((style: string) => {
       if (style.length === 0) return;
       const row = style.split(":");
