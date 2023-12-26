@@ -40,7 +40,7 @@ export default function MainPage2() {
     const foundObject = getElementById(updatedPageData, targetObjectID);
     if (!foundObject) return;
     const newStyleObject = {};
-    const styleArr = newStyle.split(";"); // TODO 줄바꿈 없애는 처리 필요
+    const styleArr = newStyle.split(";"); // TODO 줄바꿈 없애는 처리 필요(Enter 넣어도 받을 수 ㅇ씨게)
     styleArr.forEach((style: string) => {
       if (style.length === 0) return;
       const row = style.split(":");
@@ -79,15 +79,42 @@ export default function MainPage2() {
     console.log("update", updatedPageData);
     setPageData(updatedPageData);
   };
+  const handleFile = (name: string) => {
+    console.log("here::", name);
+    switch (name) {
+      case "save": {
+        localStorage.setItem("pageJson", JSON.stringify(pageData));
+        break;
+      }
+      case "load": {
+        const loadData = localStorage.getItem("pageJson");
+        if (loadData) {
+          setPageData(JSON.parse(loadData));
+        }
+        break;
+      }
+      case "clear": {
+        setPageData([
+          {
+            id: "first",
+            type: "div",
+          },
+        ]);
+        localStorage.clear();
+      }
+    }
+  };
 
   useEffect(() => {
     globalEmitter.on("click", handleAddElement);
     globalEmitter.on("style", handleAddStyle);
+    globalEmitter.on("file", handleFile);
 
     console.log("click");
     return () => {
       globalEmitter.off("click", handleAddElement);
       globalEmitter.off("style", handleAddStyle);
+      globalEmitter.off("file", handleFile);
     };
   }, [pageData, selectedID]);
 

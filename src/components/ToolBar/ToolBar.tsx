@@ -17,7 +17,7 @@ export default function ToolBar() {
   };
   const handleFile = (ev: React.MouseEvent<HTMLButtonElement>) => {
     ev.preventDefault();
-    globalEmitter.emit("file", textareaRef.current?.value);
+    globalEmitter.emit("file", ev.currentTarget?.id);
   };
 
   return (
@@ -39,13 +39,16 @@ export default function ToolBar() {
         button
       </button>
       <button onClick={handleButton} id="delete">
-        save
+        delete
       </button>
       <button onClick={handleFile} id="save">
         save
       </button>
       <button onClick={handleFile} id="clear">
         clear
+      </button>
+      <button onClick={handleFile} id="load">
+        load
       </button>
     </S.ToolBarWrapper>
   );
