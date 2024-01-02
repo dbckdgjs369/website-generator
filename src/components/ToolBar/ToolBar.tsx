@@ -10,6 +10,10 @@ export default function ToolBar() {
     ev.preventDefault();
     globalEmitter.emit("click", ev.currentTarget.id);
   };
+  const handleDelete = (ev: React.MouseEvent<HTMLButtonElement>) => {
+    ev.preventDefault();
+    globalEmitter.emit("delete", ev.currentTarget.id);
+  };
 
   const addStyle = (ev: React.MouseEvent<HTMLButtonElement>) => {
     ev.preventDefault();
@@ -38,7 +42,7 @@ export default function ToolBar() {
       <button onClick={handleButton} id="button">
         button
       </button>
-      <button onClick={handleButton} id="delete">
+      <button onClick={handleDelete} id="delete">
         delete
       </button>
       <button onClick={handleFile} id="save">

@@ -35,6 +35,13 @@ export default function MainPage2() {
     addStyle(selectedID, style);
   };
 
+  const deleteElement = () => {
+    const selectObject = getElementById(pageData, selectedID);
+    console.log("::::::::::deleteButton", selectObject);
+    const newData = { ...pageData };
+    console.log(newData);
+  };
+
   const addStyle = (targetObjectID: string, newStyle: any) => {
     const updatedPageData = [...pageData];
     const foundObject = getElementById(updatedPageData, targetObjectID);
@@ -80,7 +87,6 @@ export default function MainPage2() {
     setPageData(updatedPageData);
   };
   const handleFile = (name: string) => {
-    console.log("here::", name);
     switch (name) {
       case "save": {
         localStorage.setItem("pageJson", JSON.stringify(pageData));
@@ -109,12 +115,14 @@ export default function MainPage2() {
     globalEmitter.on("click", handleAddElement);
     globalEmitter.on("style", handleAddStyle);
     globalEmitter.on("file", handleFile);
+    globalEmitter.on("delete", deleteElement);
 
     console.log("click");
     return () => {
       globalEmitter.off("click", handleAddElement);
       globalEmitter.off("style", handleAddStyle);
       globalEmitter.off("file", handleFile);
+      globalEmitter.off("delete", deleteElement);
     };
   }, [pageData, selectedID]);
 
