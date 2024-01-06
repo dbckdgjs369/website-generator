@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useEffect, useRef, useState } from "react";
@@ -23,10 +24,14 @@ export default function MainPage2() {
     },
   ]);
   const { parseElementsToHTML } = useRender();
-  const { getElementById } = useHandleStructure();
+  const { getElementById, removeElementById } = useHandleStructure();
   const divRef = useRef<HTMLDivElement>(null);
   const globalEmitter = useGlobalEventEmitter();
   const { generateRandomString } = useMakeDOM();
+  const getStyleFromSelectedElement = (id: string) => {
+    const selected = getElementById(pageData, id);
+    globalEmitter.emit("client_style", JSON.stringify(selected?.style));
+  };
   const handleAddElement = (name: HTMLTag) => {
     addElement(name, selectedID);
   };
@@ -35,11 +40,23 @@ export default function MainPage2() {
     addStyle(selectedID, style);
   };
 
-  const deleteElement = () => {
-    const selectObject = getElementById(pageData, selectedID);
-    console.log("::::::::::deleteButton", selectObject);
-    const newData = { ...pageData };
-    console.log(newData);
+  const deleteElement = (data: any) => {
+    // console.log("data", data);
+    // for (const key in data) {
+    //   if (data[key] !== null && typeof data[key] === "object") {
+    //     if (data[key].id === selectedID) {
+    //       delete data[key];
+    //       return; // 원하는 객체를 찾았으면 함수를 종료합니다.
+    //     } else {
+    //       deleteElement(data[key]); // 재귀적으로 탐색합니다.
+    //     }
+    //   }
+    // }
+    // console.log(data);
+    const a = removeElementById(pageData, data, selectedID);
+    if (a) {
+      setPageData(a);
+    }
   };
 
   const addStyle = (targetObjectID: string, newStyle: any) => {
@@ -115,9 +132,8 @@ export default function MainPage2() {
     globalEmitter.on("click", handleAddElement);
     globalEmitter.on("style", handleAddStyle);
     globalEmitter.on("file", handleFile);
-    globalEmitter.on("delete", deleteElement);
-
-    console.log("click");
+    globalEmitter.on("delete", () => deleteElement(pageData));
+    getStyleFromSelectedElement(selectedID);
     return () => {
       globalEmitter.off("click", handleAddElement);
       globalEmitter.off("style", handleAddStyle);
@@ -136,6 +152,7 @@ export default function MainPage2() {
         const selectedElement = document.getElementById(id);
         if (!prevElement) return;
         if (!selectedElement) return;
+        prevElement?.removeAttribute("class");
         selectedElement?.setAttribute("class", "selected");
         setSelectedID(id);
       }
