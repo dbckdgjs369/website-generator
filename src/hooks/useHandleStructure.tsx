@@ -1,3 +1,4 @@
+/* eslint-disable no-delete-var */
 import { ElementStructure } from "./useRender";
 
 export default function useHandleStructure() {
@@ -19,25 +20,27 @@ export default function useHandleStructure() {
     }
     return undefined;
   }
-
-  const addElement = (
-    originArr: ElementStructure[],
-    targetID: string,
-    addStructure: ElementStructure
-  ) => {
-    const updateArr = { ...originArr };
-    console.log("originArr", originArr);
-    console.log("targetID", targetID);
-    console.log("add", addStructure);
-    const st = getElementById(updateArr, targetID);
-    if (st) {
-      if (st.inner) {
-        st.inner.push(addStructure);
-      } else {
-        st.inner = [addStructure];
+  function removeElementById(
+    originData: ElementStructure[],
+    elements: ElementStructure[],
+    id: string
+  ): ElementStructure[] | undefined {
+    console.log("originData", originData);
+    for (const element of elements) {
+      console.log("element", element);
+      if (element.id === id) {
+        const temp = elements.filter((e) => e.id !== id);
+        return temp;
+      }
+      if (element.inner) {
+        const innerElement = removeElementById(originData, element.inner, id);
+        if (innerElement) {
+          return innerElement;
+        }
       }
     }
-    return updateArr;
-  };
-  return { addElement };
+    return undefined;
+  }
+
+  return { getElementById, removeElementById };
 }
