@@ -1,56 +1,96 @@
-{
-  "div": [
-    {
-      "id": "TxmnTakJbJ",
-      "style": {
-        "display": "flex",
-        "border": "1px solid black",
-        "height": "50px",
-        "fontSize": "40px"
+[
+  {
+    "id": "first",
+    "type": "div",
+    "inner": [
+      {
+        "id": "uYYXbdisbR",
+        "type": "div",
+        "style": {
+          "display": "flex",
+          "border": "1px solid black",
+          "width": "100%",
+          "fontSize": "30px"
+        },
+        "text": "asdg"
       },
-      "text": "2"
-    },
-    {
-      "id": "fgehQpPqXh",
-      "style": {
-        "display": "flex",
-        "border": "1px solid black",
-        "height": "50px",
-        "fontSize": "40px"
+      {
+        "id": "vaEMQshhxe",
+        "type": "div",
+        "style": {
+          "display": "flex",
+          "border": "1px solid black",
+          "width": "100%",
+          "fontSize": "30px"
+        },
+        "text": "asdgasg"
       },
-      "text": "1"
-    },
-    {
-      "id": "zmmKRouFeU",
-      "style": {
-        "display": "flex",
-        "border": "1px solid black",
-        "height": "50px",
-        "fontSize": "40px"
+      {
+        "id": "DXmcBaiRha",
+        "type": "div",
+        "style": {
+          "display": "flex",
+          "border": "1px solid black",
+          "width": "100%",
+          "fontSize": "30px"
+        },
+        "text": "asdgasg"
       },
-      "text": "1"
-    },
-    {
-      "id": "PnzuBHXKGQ",
-      "style": {
-        "display": "flex",
-        "border": "1px solid black",
-        "height": "50px",
-        "fontSize": "40px"
+      {
+        "id": "JJuicADjRh",
+        "type": "div",
+        "style": {
+          "display": "flex",
+          "border": "1px solid black",
+          "width": "100%",
+          "fontSize": "30px"
+        },
+        "text": "asdgasg"
       },
-      "text": "1"
-    }
-  ],
-  "button": [
-    {
-      "id": "PnzuBHXKGQ2",
-      "style": {
-        "display": "flex",
-        "border": "1px solid black",
-        "height": "50px",
-        "fontSize": "40px"
+      {
+        "id": "ADqVRzdXhy",
+        "type": "div",
+        "style": {
+          "display": "flex",
+          "border": "1px solid black",
+          "width": "100%",
+          "fontSize": "30px"
+        },
+        "text": "asdgasg"
       },
-      "text": "1"
-    }
-  ]
-}
+      {
+        "id": "ZsaQqmOkXw",
+        "type": "div",
+        "style": {
+          "display": "flex",
+          "border": "1px solid black",
+          "width": "100%",
+          "fontSize": "30px"
+        },
+        "text": "asdgasg"
+      },
+      {
+        "id": "vyoJwxYtWr",
+        "type": "div",
+        "style": {
+          "display": "flex",
+          "border": "1px solid black",
+          "width": "100%",
+          "fontSize": "30px"
+        },
+        "text": "asdgasg"
+      },
+      {
+        "id": "dyZfEnQHsC",
+        "type": "div",
+        "style": {
+          "display": "flex",
+          "border": "1px solid black",
+          "width": "100%",
+          "fontSize": "30px"
+        },
+        "text": "asdgasg"
+      }
+    ]
+  }
+]

@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { useGlobalEventEmitter } from "../../GlobalEventEmitterContext";
 import { HTMLTag } from "../../hooks/useParse";
 import useMakeDOM from "../../hooks/useMakeDOM";
@@ -25,7 +25,6 @@ export default function MainPage2() {
   ]);
   const { parseElementsToHTML } = useRender();
   const { getElementById, removeElementById } = useHandleStructure();
-  const divRef = useRef<HTMLDivElement>(null);
   const globalEmitter = useGlobalEventEmitter();
   const { generateRandomString } = useMakeDOM();
   const getStyleFromSelectedElement = (id: string) => {
@@ -165,7 +164,7 @@ export default function MainPage2() {
   }, [pageData]);
 
   return (
-    <div id="init" ref={divRef} onClick={getID} style={{ height: "100vh" }}>
+    <div id="init" onClick={getID} style={{ height: "100vh" }}>
       <button onClick={() => setPageData([])}>reset</button>
     </div>
   );
