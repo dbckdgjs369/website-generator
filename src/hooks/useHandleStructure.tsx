@@ -1,4 +1,4 @@
-/* eslint-disable no-delete-var */
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 import { ElementStructure } from "./useRender";
 
 export default function useHandleStructure() {
@@ -20,27 +20,27 @@ export default function useHandleStructure() {
     }
     return undefined;
   }
-  function removeElementById(
-    originData: ElementStructure[],
-    elements: ElementStructure[],
-    id: string
-  ): ElementStructure[] | undefined {
-    console.log("originData", originData);
-    for (const element of elements) {
-      console.log("element", element);
-      if (element.id === id) {
-        const temp = elements.filter((e) => e.id !== id);
-        return temp;
+
+  function removeElementById(arr: ElementStructure[], targetId: string) {
+    for (let i = 0; i < arr.length; i++) {
+      const currentObj = arr[i];
+
+      if (currentObj.id === targetId) {
+        // 찾은 경우 해당 객체를 배열에서 제거
+        arr.splice(i, 1);
+        return arr;
       }
-      if (element.inner) {
-        const innerElement = removeElementById(originData, element.inner, id);
-        if (innerElement) {
-          return innerElement;
-        }
+
+      if (currentObj.inner) {
+        // inner 배열이 있는 경우 재귀적으로 탐색
+        removeElementById(currentObj.inner, targetId);
       }
     }
-    return undefined;
-  }
 
-  return { getElementById, removeElementById };
+    return arr;
+  }
+  return {
+    getElementById,
+    removeElementById,
+  };
 }

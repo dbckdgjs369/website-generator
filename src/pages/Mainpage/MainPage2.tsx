@@ -39,23 +39,15 @@ export default function MainPage2() {
     addStyle(selectedID, style);
   };
 
-  const deleteElement = (data: any) => {
-    // console.log("data", data);
-    // for (const key in data) {
-    //   if (data[key] !== null && typeof data[key] === "object") {
-    //     if (data[key].id === selectedID) {
-    //       delete data[key];
-    //       return; // 원하는 객체를 찾았으면 함수를 종료합니다.
-    //     } else {
-    //       deleteElement(data[key]); // 재귀적으로 탐색합니다.
-    //     }
-    //   }
-    // }
-    // console.log(data);
-    const a = removeElementById(pageData, data, selectedID);
-    if (a) {
-      setPageData(a);
+  const deleteElement = () => {
+    const newData = [...pageData];
+
+    const updatedArray = removeElementById([...newData], selectedID);
+
+    if (updatedArray) {
+      setPageData(updatedArray);
     }
+    setSelectedID("first");
   };
 
   const addStyle = (targetObjectID: string, newStyle: any) => {
@@ -87,7 +79,7 @@ export default function MainPage2() {
         id: generateRandomString(10),
         type: addObjectTag,
         style: DEFAULT_STYLE,
-        text: "asdgasg",
+        text: addObjectTag,
       });
     } else {
       foundObject.inner = [
@@ -95,7 +87,7 @@ export default function MainPage2() {
           id: generateRandomString(10),
           type: addObjectTag,
           style: DEFAULT_STYLE,
-          text: "asdg",
+          text: addObjectTag,
         },
       ];
     }
@@ -131,7 +123,7 @@ export default function MainPage2() {
     globalEmitter.on("click", handleAddElement);
     globalEmitter.on("style", handleAddStyle);
     globalEmitter.on("file", handleFile);
-    globalEmitter.on("delete", () => deleteElement(pageData));
+    globalEmitter.on("delete", deleteElement);
     getStyleFromSelectedElement(selectedID);
     return () => {
       globalEmitter.off("click", handleAddElement);
@@ -160,6 +152,7 @@ export default function MainPage2() {
 
   useEffect(() => {
     // 바뀐 json을 렌더해주는 부분
+    console.log("pageData여기");
     parseElementsToHTML(pageData);
   }, [pageData]);
 
