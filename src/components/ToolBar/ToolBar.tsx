@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import * as S from "./emotion";
 import { useGlobalEventEmitter } from "../../GlobalEventEmitterContext";
@@ -5,29 +6,52 @@ import { useEffect, useRef, useState } from "react";
 
 export default function ToolBar() {
   const [elementStyle, setElementStyle] = useState<any>("");
+  const [elementText, setElementText] = useState("");
   const globalEmitter = useGlobalEventEmitter();
-  const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const styleTextareaRef = useRef<HTMLTextAreaElement>(null);
+  const textTextareaRef = useRef<HTMLTextAreaElement>(null);
 
   const handleButton = (ev: React.MouseEvent<HTMLButtonElement>) => {
     ev.preventDefault();
     globalEmitter.emit("click", ev.currentTarget.id);
   };
-  const handleDelete = (ev: React.MouseEvent<HTMLButtonElement>) => {
-    ev.preventDefault();
-    globalEmitter.emit("delete", ev.currentTarget.id);
-  };
 
   const addStyle = (ev: React.MouseEvent<HTMLButtonElement>) => {
     ev.preventDefault();
-    globalEmitter.emit("style", textareaRef.current?.value);
+    globalEmitter.emit("style", styleTextareaRef.current?.value);
   };
-  const handleFile = (ev: React.MouseEvent<HTMLButtonElement>) => {
+
+  const addText = (ev: React.MouseEvent<HTMLButtonElement>) => {
     ev.preventDefault();
-    globalEmitter.emit("file", ev.currentTarget?.id);
+    globalEmitter.emit("text", textTextareaRef.current?.value);
+  };
+
+  const handleButtonClick = (ev: React.MouseEvent<HTMLButtonElement>) => {
+    ev.preventDefault();
+    const { id } = ev.currentTarget;
+    switch (id) {
+      case "delete": {
+        globalEmitter.emit(id, id);
+        break;
+      }
+      case "style": {
+        globalEmitter.emit(id, styleTextareaRef.current?.value);
+        break;
+      }
+      case "text": {
+        globalEmitter.emit(id, textTextareaRef.current?.value);
+        break;
+      }
+      case "save":
+      case "clear":
+      case "load": {
+        globalEmitter.emit("file", id);
+        break;
+      }
+    }
   };
 
   const handleStyle = (style: any) => {
-    console.log(":::::style in toolbar", style);
     if (!style) return;
     const trimmedString = style.slice(1, -1);
 
@@ -39,31 +63,41 @@ export default function ToolBar() {
 
     setElementStyle(cssProperties);
   };
+  const handleText = (content: string) => {
+    setElementText(content?.replace(/"/g, ""));
+  };
 
   useEffect(() => {
-    globalEmitter.on("client_style", handleStyle);
-
+    globalEmitter.on("element_style", handleStyle);
+    globalEmitter.on("element_text", handleText);
     return () => {
-      globalEmitter.off("client_style", handleStyle);
+      globalEmitter.off("element_style", handleStyle);
+      globalEmitter.off("element_text", handleText);
     };
   }, []);
 
   return (
     <S.ToolBarWrapper>
-      <S.CurrentWrapper>여기에 클릭한 요소가 보여야 됌</S.CurrentWrapper>
-      <S.ButtonWrapper>
+      {/* <S.ButtonWrapper>
         <S.Button>left</S.Button>
         <S.Button>center</S.Button>
         <S.Button>right</S.Button>
-      </S.ButtonWrapper>
+      </S.ButtonWrapper> */}
       <S.CurrentWrapper>
         <textarea
           style={{ height: "200px" }}
-          ref={textareaRef}
+          ref={styleTextareaRef}
           value={elementStyle}
           onChange={(ev) => setElementStyle(ev.target.value)}
         />
         <button onClick={addStyle}>직접 스타일 추가</button>
+        <textarea
+          style={{ height: "200px" }}
+          ref={textTextareaRef}
+          value={elementText}
+          onChange={(ev) => setElementText(ev.target.value)}
+        />
+        <button onClick={addText}>문구 추가</button>
       </S.CurrentWrapper>
       <button onClick={(ev) => handleButton(ev)} id="div">
         div
@@ -71,18 +105,20 @@ export default function ToolBar() {
       <button onClick={handleButton} id="button">
         button
       </button>
-      <button onClick={handleDelete} id="delete">
+      <button onClick={handleButtonClick} id="delete">
         delete
       </button>
-      <button onClick={handleFile} id="save">
-        save
-      </button>
-      <button onClick={handleFile} id="clear">
-        clear
-      </button>
-      <button onClick={handleFile} id="load">
-        load
-      </button>
+      <S.ButtonWrapper>
+        <S.Button onClick={handleButtonClick} id="save">
+          save
+        </S.Button>
+        <S.Button onClick={handleButtonClick} id="clear">
+          clear
+        </S.Button>
+        <S.Button onClick={handleButtonClick} id="load">
+          load
+        </S.Button>
+      </S.ButtonWrapper>
     </S.ToolBarWrapper>
   );
 }

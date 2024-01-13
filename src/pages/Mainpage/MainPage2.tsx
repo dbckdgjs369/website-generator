@@ -16,10 +16,10 @@ const DEFAULT_STYLE = {
 };
 
 export default function MainPage2() {
-  const [selectedID, setSelectedID] = useState("first");
+  const [selectedID, setSelectedID] = useState("default");
   const [pageData, setPageData] = useState<ElementStructure[]>([
     {
-      id: "first",
+      id: "default",
       type: "div",
     },
   ]);
@@ -29,14 +29,21 @@ export default function MainPage2() {
   const { generateRandomString } = useMakeDOM();
   const getStyleFromSelectedElement = (id: string) => {
     const selected = getElementById(pageData, id);
-    globalEmitter.emit("client_style", JSON.stringify(selected?.style));
+    globalEmitter.emit("element_style", JSON.stringify(selected?.style));
+    globalEmitter.emit("element_text", JSON.stringify(selected?.text));
   };
   const handleAddElement = (name: HTMLTag) => {
     addElement(name, selectedID);
   };
 
   const handleAddStyle = (style: any) => {
+    console.log("::::::selectedID", selectedID);
     addStyle(selectedID, style);
+  };
+
+  const handleAddText = (text: string) => {
+    console.log("::::::selectedID", selectedID);
+    addText(selectedID, text);
   };
 
   const deleteElement = () => {
@@ -47,7 +54,15 @@ export default function MainPage2() {
     if (updatedArray) {
       setPageData(updatedArray);
     }
-    setSelectedID("first");
+    setSelectedID("default");
+  };
+
+  const addText = (id: string, text: string) => {
+    const updatedPageData = [...pageData];
+    const foundObject = getElementById(updatedPageData, id);
+    if (!foundObject) return;
+    foundObject.text = text;
+    setPageData(updatedPageData);
   };
 
   const addStyle = (targetObjectID: string, newStyle: any) => {
@@ -110,7 +125,7 @@ export default function MainPage2() {
       case "clear": {
         setPageData([
           {
-            id: "first",
+            id: "default",
             type: "div",
           },
         ]);
@@ -122,6 +137,7 @@ export default function MainPage2() {
   useEffect(() => {
     globalEmitter.on("click", handleAddElement);
     globalEmitter.on("style", handleAddStyle);
+    globalEmitter.on("text", handleAddText);
     globalEmitter.on("file", handleFile);
     globalEmitter.on("delete", deleteElement);
     getStyleFromSelectedElement(selectedID);
@@ -130,13 +146,14 @@ export default function MainPage2() {
       globalEmitter.off("style", handleAddStyle);
       globalEmitter.off("file", handleFile);
       globalEmitter.off("delete", deleteElement);
+      globalEmitter.off("text", handleAddText);
     };
   }, [pageData, selectedID]);
 
   const getID = (ev: React.MouseEvent<HTMLDivElement>) => {
     if (ev.target instanceof Element) {
       if (ev.target.id === "init") {
-        setSelectedID("first");
+        setSelectedID("default");
       } else {
         const id = ev.target.id;
         const prevElement = document.getElementById(selectedID); // 만약에 점선 유지시키고 싶으면 json에 넣어서 이거 사용해야 됌
