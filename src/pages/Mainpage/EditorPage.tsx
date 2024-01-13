@@ -27,7 +27,7 @@ export default function MainPage2() {
   const { getElementById, removeElementById } = useHandleStructure();
   const globalEmitter = useGlobalEventEmitter();
   const { generateRandomString } = useMakeDOM();
-  const getStyleFromSelectedElement = (id: string) => {
+  const getSelectedElementInfo = (id: string) => {
     const selected = getElementById(pageData, id);
     globalEmitter.emit("element_style", JSON.stringify(selected?.style));
     globalEmitter.emit("element_text", JSON.stringify(selected?.text));
@@ -37,40 +37,11 @@ export default function MainPage2() {
   };
 
   const handleAddStyle = (style: any) => {
-    console.log("::::::selectedID", selectedID);
-    addStyle(selectedID, style);
-  };
-
-  const handleAddText = (text: string) => {
-    console.log("::::::selectedID", selectedID);
-    addText(selectedID, text);
-  };
-
-  const deleteElement = () => {
-    const newData = [...pageData];
-
-    const updatedArray = removeElementById([...newData], selectedID);
-
-    if (updatedArray) {
-      setPageData(updatedArray);
-    }
-    setSelectedID("default");
-  };
-
-  const addText = (id: string, text: string) => {
     const updatedPageData = [...pageData];
-    const foundObject = getElementById(updatedPageData, id);
-    if (!foundObject) return;
-    foundObject.text = text;
-    setPageData(updatedPageData);
-  };
-
-  const addStyle = (targetObjectID: string, newStyle: any) => {
-    const updatedPageData = [...pageData];
-    const foundObject = getElementById(updatedPageData, targetObjectID);
+    const foundObject = getElementById(updatedPageData, selectedID);
     if (!foundObject) return;
     const newStyleObject = {};
-    const styleArr = newStyle.replace(/\r?\n|\r/g, "").split(";");
+    const styleArr = style.replace(/\r?\n|\r/g, "").split(";");
     styleArr.forEach((style: string) => {
       if (style.length === 0) return;
       const row = style.split(":");
@@ -84,6 +55,24 @@ export default function MainPage2() {
     }
     setPageData(updatedPageData);
   };
+
+  const handleAddText = (text: string) => {
+    const updatedPageData = [...pageData];
+    const foundObject = getElementById(updatedPageData, selectedID);
+    if (!foundObject) return;
+    foundObject.text = text;
+    setPageData(updatedPageData);
+  };
+
+  const deleteElement = () => {
+    const newData = [...pageData];
+    const updatedArray = removeElementById([...newData], selectedID);
+    if (updatedArray) {
+      setPageData(updatedArray);
+    }
+    setSelectedID("default");
+  };
+
   const addElement = (addObjectTag: HTMLTag, targetObjectID: string) => {
     // id를 가진 요소에 object Tag를 추가해줌
     const updatedPageData = [...pageData];
@@ -106,7 +95,6 @@ export default function MainPage2() {
         },
       ];
     }
-    console.log("update", updatedPageData);
     setPageData(updatedPageData);
   };
   const handleFile = (name: string) => {
@@ -140,7 +128,7 @@ export default function MainPage2() {
     globalEmitter.on("text", handleAddText);
     globalEmitter.on("file", handleFile);
     globalEmitter.on("delete", deleteElement);
-    getStyleFromSelectedElement(selectedID);
+    getSelectedElementInfo(selectedID);
     return () => {
       globalEmitter.off("click", handleAddElement);
       globalEmitter.off("style", handleAddStyle);
@@ -169,7 +157,6 @@ export default function MainPage2() {
 
   useEffect(() => {
     // 바뀐 json을 렌더해주는 부분
-    console.log("pageData여기");
     parseElementsToHTML(pageData);
   }, [pageData]);
 

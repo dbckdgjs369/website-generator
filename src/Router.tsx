@@ -2,7 +2,7 @@ import { useNavigate, useRoutes } from "react-router-dom";
 
 import Layout from "./layout/Layout";
 import { useEffect } from "react";
-import MainPage2 from "./pages/Mainpage/MainPage2";
+import EditorPage from "./pages/Mainpage/EditorPage";
 import TestPage from "./pages/Mainpage/TestPage";
 
 const PATHS = {
@@ -20,7 +20,7 @@ export default function Router() {
   return useRoutes([
     {
       path: PATHS.main,
-      element: withLayout(<MainPage2 />),
+      element: withLayout(<EditorPage />),
     },
     {
       path: PATHS.test,
