@@ -3,6 +3,7 @@
 import * as S from "./emotion";
 import { useGlobalEventEmitter } from "../../GlobalEventEmitterContext";
 import { useEffect, useRef, useState } from "react";
+import { allHtmlTags } from "../../constant/constant";
 
 export default function ToolBar() {
   const [tagList, setTagList] = useState<string[]>(["div", "button"]);
@@ -63,7 +64,7 @@ export default function ToolBar() {
 
     // 큰따옴표 없애기
     const withoutQuotes = trimmedString.replace(/"/g, "");
-
+    if (!withoutQuotes) return;
     // 쉼표를 세미콜론으로 바꾸기
     const cssProperties = withoutQuotes.replace(/,/g, ";\n") + ";";
 

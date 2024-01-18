@@ -37,23 +37,22 @@ export default function MainPage2() {
     addElement(name, selectedID);
   };
 
-  const handleAddStyle = (style: any) => {
+  const handleAddStyle = (styleFromToolBar: any) => {
     const updatedPageData = [...pageData];
     const foundObject = getElementById(updatedPageData, selectedID);
     if (!foundObject) return;
     const newStyleObject = {};
-    const styleArr = style.replace(/\r?\n|\r/g, "").split(";");
+    const styleArr = styleFromToolBar.replace(/\r?\n|\r/g, "").split(";");
     styleArr.forEach((style: string) => {
       if (style.length === 0) return;
       const row = style.split(":");
       //@ts-ignore
       newStyleObject[row[0]] = row[1];
     });
-    if (foundObject.style) {
-      foundObject.style = { ...foundObject.style, ...newStyleObject };
-    } else {
-      foundObject.style = { ...newStyleObject };
-    }
+
+    foundObject.style = { ...newStyleObject };
+    globalEmitter.emit("element_style", JSON.stringify({ ...newStyleObject }));
+
     setPageData(updatedPageData);
   };
 
