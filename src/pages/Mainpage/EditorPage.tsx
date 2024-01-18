@@ -13,6 +13,7 @@ const DEFAULT_STYLE = {
   border: "1px solid black",
   width: "100%",
   fontSize: "30px",
+  minHeight: "40px",
 };
 
 export default function MainPage2() {

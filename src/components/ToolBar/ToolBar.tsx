@@ -5,11 +5,13 @@ import { useGlobalEventEmitter } from "../../GlobalEventEmitterContext";
 import { useEffect, useRef, useState } from "react";
 
 export default function ToolBar() {
+  const [tagList, setTagList] = useState<string[]>(["div", "button"]);
   const [elementStyle, setElementStyle] = useState<any>("");
   const [elementText, setElementText] = useState("");
   const globalEmitter = useGlobalEventEmitter();
   const styleTextareaRef = useRef<HTMLTextAreaElement>(null);
   const textTextareaRef = useRef<HTMLTextAreaElement>(null);
+  const tagInputRef = useRef<HTMLInputElement>(null);
 
   const handleButton = (ev: React.MouseEvent<HTMLButtonElement>) => {
     ev.preventDefault();
@@ -24,6 +26,10 @@ export default function ToolBar() {
   const addText = (ev: React.MouseEvent<HTMLButtonElement>) => {
     ev.preventDefault();
     globalEmitter.emit("text", textTextareaRef.current?.value);
+  };
+  const addTag = (ev: React.MouseEvent<HTMLButtonElement>) => {
+    ev.preventDefault();
+    globalEmitter.emit("tag", tagInputRef.current?.value);
   };
 
   const handleButtonClick = (ev: React.MouseEvent<HTMLButtonElement>) => {
@@ -78,13 +84,9 @@ export default function ToolBar() {
 
   return (
     <S.ToolBarWrapper>
-      {/* <S.ButtonWrapper>
-        <S.Button>left</S.Button>
-        <S.Button>center</S.Button>
-        <S.Button>right</S.Button>
-      </S.ButtonWrapper> */}
       <S.CurrentWrapper>
         <textarea
+          placeholder="추가하실 스타일을 입력하세요"
           style={{ height: "200px" }}
           ref={styleTextareaRef}
           value={elementStyle}
@@ -92,6 +94,7 @@ export default function ToolBar() {
         />
         <button onClick={addStyle}>직접 스타일 추가</button>
         <textarea
+          placeholder="추가하실 문구를 입력하세요"
           style={{ height: "200px" }}
           ref={textTextareaRef}
           value={elementText}
@@ -99,12 +102,19 @@ export default function ToolBar() {
         />
         <button onClick={addText}>문구 추가</button>
       </S.CurrentWrapper>
-      <button onClick={(ev) => handleButton(ev)} id="div">
+      <S.CurrentWrapper>
+        {tagList.map((tag) => (
+          <button onClick={(ev) => handleButton(ev)} id={tag}>
+            {tag}
+          </button>
+        ))}
+      </S.CurrentWrapper>
+      {/* <button onClick={(ev) => handleButton(ev)} id="div">
         div
       </button>
       <button onClick={handleButton} id="button">
         button
-      </button>
+      </button> */}
       <button onClick={handleButtonClick} id="delete">
         delete
       </button>
