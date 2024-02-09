@@ -12,7 +12,7 @@ export interface ElementStructure {
 export default function useRender() {
   function createHTMLElement(elementData: ElementStructure): HTMLElement {
     const element = document.createElement(elementData.type);
-
+    element.draggable = true;
     element.id = elementData.id;
 
     if (elementData.style) {
