@@ -159,9 +159,45 @@ export default function MainPage2() {
     // 바뀐 json을 렌더해주는 부분
     parseElementsToHTML(pageData);
   }, [pageData]);
+  // const { drop } = useDragNDrop(pageData);
+  const drop = (ev: any) => {
+    const newData = [...pageData];
 
+    const x = ev.clientX;
+    const y = ev.clientY;
+    // 찾은 DOM 요소 정보 확인 또는 처리
+
+    const dragTarget = ev.target;
+    const dropTarget = document.elementFromPoint(x, y);
+
+    console.log(":::::::dragTarget", dragTarget);
+    const dragObj = getElementById(newData, dragTarget.id);
+    // removeElementById(newData, dragTarget.id);
+    const updatedArray = removeElementById([...newData], dragTarget.id);
+    const dropObj = getElementById(updatedArray, dropTarget?.id || "");
+    if (!dropObj) return;
+    if (!dragObj) return;
+    if (dropObj.inner) {
+      dropObj.inner.push({ ...dragObj });
+    } else {
+      dropObj.inner = [
+        {
+          ...dragObj,
+        },
+      ];
+    }
+    if (updatedArray) {
+      setPageData(updatedArray);
+    }
+  };
   return (
-    <div id="init" onClick={getID} style={{ height: "100vh" }}>
+    <div
+      id="init"
+      onClick={getID}
+      style={{ height: "100vh" }}
+      draggable={true}
+      onDragEnd={drop}
+    >
       <button onClick={() => setPageData([])}>reset</button>
     </div>
   );
