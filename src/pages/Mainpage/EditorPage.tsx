@@ -22,6 +22,10 @@ export default function MainPage2() {
     {
       id: "default",
       type: "div",
+      style: {
+        width: "100%",
+        height: "100%",
+      },
     },
   ]);
   const { parseElementsToHTML } = useRender();
@@ -169,8 +173,8 @@ export default function MainPage2() {
 
     const dragTarget = ev.target;
     const dropTarget = document.elementFromPoint(x, y);
-
-    console.log(":::::::dragTarget", dragTarget);
+    console.log("dropTarget", dropTarget);
+    console.log("pageD", pageData);
     const dragObj = getElementById(newData, dragTarget.id);
     // removeElementById(newData, dragTarget.id);
     const updatedArray = removeElementById([...newData], dragTarget.id);
