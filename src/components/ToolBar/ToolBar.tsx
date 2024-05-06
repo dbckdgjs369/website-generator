@@ -1,13 +1,12 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import * as S from "./emotion";
 import { useGlobalEventEmitter } from "../../GlobalEventEmitterContext";
 import { useEffect, useRef, useState } from "react";
-import { allHtmlTags } from "../../constant/constant";
+// import { allHtmlTags } from "../../constant/constant";
 
 export default function ToolBar() {
   const [tagList, setTagList] = useState<string[]>(["div", "button"]);
-  const [elementStyle, setElementStyle] = useState<any>("");
+  const [elementStyle, setElementStyle] = useState<string>("");
   const [elementText, setElementText] = useState("");
   const globalEmitter = useGlobalEventEmitter();
   const styleTextareaRef = useRef<HTMLTextAreaElement>(null);
@@ -58,7 +57,7 @@ export default function ToolBar() {
     }
   };
 
-  const handleStyle = (style: any) => {
+  const handleStyle = (style: string) => {
     if (!style) return;
     const trimmedString = style.slice(1, -1);
 
@@ -105,17 +104,11 @@ export default function ToolBar() {
       </S.CurrentWrapper>
       <S.CurrentWrapper>
         {tagList.map((tag) => (
-          <button onClick={(ev) => handleButton(ev)} id={tag}>
+          <button onClick={(ev) => handleButton(ev)} id={tag} key={tag}>
             {tag}
           </button>
         ))}
       </S.CurrentWrapper>
-      {/* <button onClick={(ev) => handleButton(ev)} id="div">
-        div
-      </button>
-      <button onClick={handleButton} id="button">
-        button
-      </button> */}
       <button onClick={handleButtonClick} id="delete">
         delete
       </button>

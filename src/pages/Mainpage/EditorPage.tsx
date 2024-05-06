@@ -1,12 +1,10 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-/* eslint-disable @typescript-eslint/ban-ts-comment */
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useEffect, useState } from "react";
+
 import { useGlobalEventEmitter } from "../../GlobalEventEmitterContext";
 import { HTMLTag } from "../../hooks/useParse";
-import useMakeDOM from "../../hooks/useMakeDOM";
 import useRender, { ElementStructure } from "../../hooks/useRender";
 import useHandleStructure from "../../hooks/useHandleStructure";
+import { generateRandomString } from "../../utils/utils";
 
 const DEFAULT_STYLE = {
   display: "flex",
@@ -16,7 +14,7 @@ const DEFAULT_STYLE = {
   minHeight: "40px",
 };
 
-export default function MainPage2() {
+export default function EditorPage() {
   const [selectedID, setSelectedID] = useState("default");
   const [pageData, setPageData] = useState<ElementStructure[]>([
     {
@@ -31,7 +29,6 @@ export default function MainPage2() {
   const { parseElementsToHTML } = useRender();
   const { getElementById, removeElementById } = useHandleStructure();
   const globalEmitter = useGlobalEventEmitter();
-  const { generateRandomString } = useMakeDOM();
   const getSelectedElementInfo = (id: string) => {
     const selected = getElementById(pageData, id);
     globalEmitter.emit("element_style", JSON.stringify(selected?.style));
@@ -41,16 +38,15 @@ export default function MainPage2() {
     addElement(name, selectedID);
   };
 
-  const handleAddStyle = (styleFromToolBar: any) => {
+  const handleAddStyle = (styleFromToolBar: string) => {
     const updatedPageData = [...pageData];
     const foundObject = getElementById(updatedPageData, selectedID);
     if (!foundObject) return;
-    const newStyleObject = {};
+    const newStyleObject: { [key: string]: string } = {};
     const styleArr = styleFromToolBar.replace(/\r?\n|\r/g, "").split(";");
     styleArr.forEach((style: string) => {
       if (style.length === 0) return;
       const row = style.split(":");
-      //@ts-ignore
       newStyleObject[row[0]] = row[1];
     });
 
@@ -163,20 +159,15 @@ export default function MainPage2() {
     // 바뀐 json을 렌더해주는 부분
     parseElementsToHTML(pageData);
   }, [pageData]);
-  // const { drop } = useDragNDrop(pageData);
-  const drop = (ev: any) => {
+  const drop = (ev: React.DragEvent<HTMLElement>) => {
     const newData = [...pageData];
 
     const x = ev.clientX;
     const y = ev.clientY;
-    // 찾은 DOM 요소 정보 확인 또는 처리
 
-    const dragTarget = ev.target;
+    const dragTarget = ev.target as HTMLElement;
     const dropTarget = document.elementFromPoint(x, y);
-    console.log("dropTarget", dropTarget);
-    console.log("pageD", pageData);
     const dragObj = getElementById(newData, dragTarget.id);
-    // removeElementById(newData, dragTarget.id);
     const updatedArray = removeElementById([...newData], dragTarget.id);
     const dropObj = getElementById(updatedArray, dropTarget?.id || "");
     if (!dropObj) return;
@@ -194,6 +185,7 @@ export default function MainPage2() {
       setPageData(updatedArray);
     }
   };
+
   return (
     <div
       id="init"
