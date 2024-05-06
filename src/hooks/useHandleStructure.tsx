@@ -1,8 +1,6 @@
-/* eslint-disable @typescript-eslint/ban-ts-comment */
 import { ElementStructure } from "./useRender";
 
 export default function useHandleStructure() {
-  // 배열 핸들러
   function getElementById(
     elements: ElementStructure[],
     id: string

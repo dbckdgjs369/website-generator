@@ -1,10 +1,8 @@
 import { useEffect, useRef, useState } from "react";
+
 import { useGlobalEventEmitter } from "../../GlobalEventEmitterContext";
 import { ElementTagType, HTMLTag } from "../../hooks/useParse";
 import useMakeDOM from "../../hooks/useMakeDOM";
-// import testData from "../../assets/test.json";
-
-// import testData2 from "../../assets/test2.json";
 import { data } from "../../assets/testArray";
 import useRender from "../../hooks/useRender";
 
@@ -48,17 +46,8 @@ export default function MainPage() {
 
   useEffect(() => {
     // 바뀐 json을 렌더해주는 부분
-    // jsonToHtml(json!, divRef.current as HTMLElement);
-    // jsonToHtml(testData2, divRef.current as HTMLElement);
     parseElementsToHTML(data);
   }, [json, jsonToHtml]);
-
-  useEffect(() => {
-    console.log("selected", selectedID);
-    addSelecetedStyle();
-  }, [selectedID]);
-
-  const addSelecetedStyle = () => {};
 
   function getObjectById(
     id: string,
@@ -66,25 +55,20 @@ export default function MainPage() {
   ): ElementTagType | undefined {
     for (const key in data) {
       switch (key) {
-        case "id": {
-          break;
-        }
-        case "style": {
-          break;
-        }
+        case "id":
+        case "style":
         case "text": {
           break;
         }
         default: {
-          const temp = data[key as HTMLTag] as ElementTagType[];
-          for (const element of temp) {
+          const idValue = data[key as HTMLTag] as ElementTagType[];
+          for (const element of idValue) {
             if (element.id === id) {
-              console.log("match!!", element);
               return element;
             } else {
               const result = getObjectById(id, element);
               if (result) {
-                return result; // Return the result of the recursive call
+                return result;
               }
             }
           }
