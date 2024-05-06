@@ -104,17 +104,11 @@ export default function ToolBar() {
       </S.CurrentWrapper>
       <S.CurrentWrapper>
         {tagList.map((tag) => (
-          <button onClick={(ev) => handleButton(ev)} id={tag}>
+          <button onClick={(ev) => handleButton(ev)} id={tag} key={tag}>
             {tag}
           </button>
         ))}
       </S.CurrentWrapper>
-      {/* <button onClick={(ev) => handleButton(ev)} id="div">
-        div
-      </button>
-      <button onClick={handleButton} id="button">
-        button
-      </button> */}
       <button onClick={handleButtonClick} id="delete">
         delete
       </button>
