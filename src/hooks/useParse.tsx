@@ -1,21 +1,5 @@
 import { CSSProperties } from "react";
-
-export type HTMLTag = keyof HTMLElementTagNameMap;
-type StringKeyStringValueObject = {
-  [key: string]: string | { [key: string]: string };
-};
-
-export type ElementTagType = {
-  style?: CSSProperties | StringKeyStringValueObject; //@TODO 추후에 style 넣을 때 kebab으로 바꿔서 넣어줘야할 듯
-  text?: string;
-  id?: string;
-} & {
-  [key in HTMLTag]?: key extends "style"
-    ? CSSProperties
-    : key extends "text" & "id"
-    ? string
-    : ElementTagType[];
-};
+import { ElementTagType, HTMLTag } from "../types";
 
 export default function useParse() {
   function jsonToHtml(json: ElementTagType) {

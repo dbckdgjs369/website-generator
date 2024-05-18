@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
 
-import { useGlobalEventEmitter } from "../../GlobalEventEmitterContext";
-import { HTMLTag } from "../../hooks/useParse";
+import { useGlobalEventEmitter } from "../../provider/GlobalEventProvider/GlobalEventEmitterContext";
 import useRender, { ElementStructure } from "../../hooks/useRender";
 import useHandleStructure from "../../hooks/useHandleStructure";
 import { generateRandomString } from "../../utils/utils";
+import { HTMLTag } from "../../types";
 
 const DEFAULT_STYLE = {
   display: "flex",

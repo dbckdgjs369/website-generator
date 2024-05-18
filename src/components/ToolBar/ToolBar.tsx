@@ -1,17 +1,15 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import * as S from "./emotion";
-import { useGlobalEventEmitter } from "../../GlobalEventEmitterContext";
+import { useGlobalEventEmitter } from "../../provider/GlobalEventProvider/GlobalEventEmitterContext";
 import { useEffect, useRef, useState } from "react";
 // import { allHtmlTags } from "../../constant/constant";
 
 export default function ToolBar() {
-  const [tagList, setTagList] = useState<string[]>(["div", "button"]);
+  const [tagList] = useState<string[]>(["div", "button"]);
   const [elementStyle, setElementStyle] = useState<string>("");
   const [elementText, setElementText] = useState("");
   const globalEmitter = useGlobalEventEmitter();
   const styleTextareaRef = useRef<HTMLTextAreaElement>(null);
   const textTextareaRef = useRef<HTMLTextAreaElement>(null);
-  const tagInputRef = useRef<HTMLInputElement>(null);
 
   const handleButton = (ev: React.MouseEvent<HTMLButtonElement>) => {
     ev.preventDefault();
@@ -26,10 +24,6 @@ export default function ToolBar() {
   const addText = (ev: React.MouseEvent<HTMLButtonElement>) => {
     ev.preventDefault();
     globalEmitter.emit("text", textTextareaRef.current?.value);
-  };
-  const addTag = (ev: React.MouseEvent<HTMLButtonElement>) => {
-    ev.preventDefault();
-    globalEmitter.emit("tag", tagInputRef.current?.value);
   };
 
   const handleButtonClick = (ev: React.MouseEvent<HTMLButtonElement>) => {
