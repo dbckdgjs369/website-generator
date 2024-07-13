@@ -1,6 +1,7 @@
 import * as S from "./emotion";
 import { useGlobalEventEmitter } from "../../provider/GlobalEventProvider/GlobalEventEmitterContext";
 import { useEffect, useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
 // import { allHtmlTags } from "../../constant/constant";
 
 export default function ToolBar() {
@@ -10,6 +11,7 @@ export default function ToolBar() {
   const globalEmitter = useGlobalEventEmitter();
   const styleTextareaRef = useRef<HTMLTextAreaElement>(null);
   const textTextareaRef = useRef<HTMLTextAreaElement>(null);
+  const navigate = useNavigate();
 
   const handleButton = (ev: React.MouseEvent<HTMLButtonElement>) => {
     ev.preventDefault();
@@ -117,6 +119,8 @@ export default function ToolBar() {
           load
         </S.Button>
       </S.ButtonWrapper>
+      <S.Button onClick={() => navigate("/component")}>make component</S.Button>
+      <S.Button onClick={() => navigate("/main")}>return to main</S.Button>
     </S.ToolBarWrapper>
   );
 }
