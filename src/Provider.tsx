@@ -124,7 +124,10 @@ export default function Provider({ children }: { children: React.ReactNode }) {
       case "load": {
         const loadData = localStorage.getItem("pageJson");
         if (loadData) {
-          setPageData(JSON.parse(loadData));
+          setPageData({
+            pageName: currentPageName,
+            data: JSON.parse(loadData),
+          });
         }
         break;
       }
@@ -139,6 +142,22 @@ export default function Provider({ children }: { children: React.ReactNode }) {
           ],
         });
         localStorage.clear();
+        break;
+      }
+      case "component": {
+        // setPageData({
+        //   pageName: currentPageName,
+        //   data: [
+        //     {
+        //       id: "component",
+        //       type: "div",
+        //       text: "hello",
+        //     },
+        //   ],
+        // });
+        addElement("div", selectedID);
+        // localStorage.setItem("component", JSON.stringify(pageData));
+        break;
       }
     }
   };
@@ -157,7 +176,7 @@ export default function Provider({ children }: { children: React.ReactNode }) {
       globalEmitter.off("delete", deleteElement);
       globalEmitter.off("text", handleAddText);
     };
-  }, [pageData]);
+  }, [pageData, selectedID]);
 
   const getID = (ev: React.MouseEvent<HTMLDivElement>) => {
     if (ev.target instanceof Element) {

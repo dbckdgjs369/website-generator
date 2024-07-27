@@ -1,7 +1,9 @@
+import { useEffect, useRef, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
+
 import * as S from "./emotion";
 import { useGlobalEventEmitter } from "../../provider/GlobalEventProvider/GlobalEventEmitterContext";
-import { useEffect, useRef, useState } from "react";
-import { useNavigate } from "react-router-dom";
+
 // import { allHtmlTags } from "../../constant/constant";
 
 export default function ToolBar() {
@@ -12,6 +14,7 @@ export default function ToolBar() {
   const styleTextareaRef = useRef<HTMLTextAreaElement>(null);
   const textTextareaRef = useRef<HTMLTextAreaElement>(null);
   const navigate = useNavigate();
+  const location = useLocation();
 
   const handleButton = (ev: React.MouseEvent<HTMLButtonElement>) => {
     ev.preventDefault();
@@ -46,7 +49,8 @@ export default function ToolBar() {
       }
       case "save":
       case "clear":
-      case "load": {
+      case "load":
+      case "component": {
         globalEmitter.emit("file", id);
         break;
       }
@@ -77,6 +81,14 @@ export default function ToolBar() {
       globalEmitter.off("element_text", handleText);
     };
   }, []);
+  const [componentList, setComponentList] = useState([]);
+  const loadData = localStorage.getItem("component");
+  useEffect(() => {
+    if (loadData) {
+      const data = JSON.parse(loadData);
+      setComponentList(data);
+    }
+  }, [loadData]);
 
   return (
     <S.ToolBarWrapper>
@@ -121,6 +133,12 @@ export default function ToolBar() {
       </S.ButtonWrapper>
       <S.Button onClick={() => navigate("/component")}>make component</S.Button>
       <S.Button onClick={() => navigate("/main")}>return to main</S.Button>
+      {location.pathname.includes("component") ? (
+        <S.Button id="component" onClick={handleButtonClick}>
+          저장하기
+        </S.Button>
+      ) : null}
+      {/* <select>{componentList.map(e=>e.)}</select> */}
     </S.ToolBarWrapper>
   );
 }
