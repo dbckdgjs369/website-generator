@@ -1,3 +1,5 @@
+import { isEmpty } from "lodash";
+
 import { ElementStructure } from "./useRender";
 
 export default function useHandleStructure() {
@@ -5,6 +7,7 @@ export default function useHandleStructure() {
     elements: ElementStructure[],
     id: string
   ): ElementStructure | undefined {
+    if (isEmpty(elements)) return;
     for (const element of elements) {
       if (element.id === id) {
         return element;

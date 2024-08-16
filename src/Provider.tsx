@@ -1,10 +1,12 @@
+import { isEmpty } from "lodash";
 import { useEffect, useState } from "react";
-import useRender, { ElementStructure } from "./hooks/useRender";
+import { useLocation } from "react-router-dom";
+
+import useRender from "./hooks/useRender";
 import { useHandleStructure } from "./hooks";
 import { useGlobalEventEmitter } from "./provider/GlobalEventProvider/GlobalEventEmitterContext";
 import { HTMLTag } from "./types";
 import { generateRandomString } from "./utils/utils";
-import { useLocation } from "react-router-dom";
 import usePageData from "./hooks/usePageData";
 
 const DEFAULT_STYLE = {
@@ -15,44 +17,29 @@ const DEFAULT_STYLE = {
   minHeight: "40px",
 };
 
-const DEFAULT_PAGE_DATA: ElementStructure[] = [
-  {
-    id: "default",
-    type: "div",
-    style: {
-      width: "100%",
-      height: "100%",
-    },
-  },
-];
-
 export default function Provider({ children }: { children: React.ReactNode }) {
   const [selectedID, setSelectedID] = useState("default");
   const location = useLocation();
 
   const currentPageName = location.pathname.replace("/", "");
-  const { pageData, setPage: setPageData } = usePageData(currentPageName);
+  const { pageData, updatePageData: setPageData } =
+    usePageData(currentPageName);
   const { parseElementsToHTML } = useRender();
   const { getElementById, removeElementById } = useHandleStructure();
   const globalEmitter = useGlobalEventEmitter();
   const getSelectedElementInfo = (id: string) => {
-    if (!pageData) return;
+    if (isEmpty(pageData)) return;
     const selected = getElementById(pageData, id);
     globalEmitter.emit("element_style", JSON.stringify(selected?.style));
     globalEmitter.emit("element_text", JSON.stringify(selected?.text));
   };
 
-  useEffect(() => {
-    if (!pageData) {
-      setPageData({ pageName: currentPageName, data: DEFAULT_PAGE_DATA });
-    }
-  }, [currentPageName]);
   const handleAddElement = (name: HTMLTag) => {
     addElement(name, selectedID);
   };
 
   const handleAddStyle = (styleFromToolBar: string) => {
-    if (!pageData) return;
+    if (isEmpty(pageData)) return;
     const updatedPageData = [...pageData];
     const foundObject = getElementById(updatedPageData, selectedID);
     if (!foundObject) return;
@@ -67,32 +54,32 @@ export default function Provider({ children }: { children: React.ReactNode }) {
     foundObject.style = { ...newStyleObject };
     globalEmitter.emit("element_style", JSON.stringify({ ...newStyleObject }));
 
-    setPageData({ pageName: currentPageName, data: updatedPageData });
+    setPageData(updatedPageData);
   };
 
   const handleAddText = (text: string) => {
-    if (!pageData) return;
+    if (isEmpty(pageData)) return;
     const updatedPageData = [...pageData];
     const foundObject = getElementById(updatedPageData, selectedID);
     if (!foundObject) return;
     foundObject.text = text;
-    setPageData({ pageName: currentPageName, data: updatedPageData });
+    setPageData(updatedPageData);
   };
 
   const deleteElement = () => {
-    if (!pageData) return;
+    if (isEmpty(pageData)) return;
     if (selectedID === "default") return;
     const newData = [...pageData];
     const updatedArray = removeElementById([...newData], selectedID);
     if (updatedArray) {
-      setPageData({ pageName: currentPageName, data: updatedArray });
+      setPageData(updatedArray);
     }
     setSelectedID("default");
   };
 
   const addElement = (addObjectTag: HTMLTag, targetObjectID: string) => {
     // id를 가진 요소에 object Tag를 추가해줌
-    if (!pageData) return;
+    if (isEmpty(pageData)) return;
     const updatedPageData = [...pageData];
     const foundObject = getElementById(updatedPageData, targetObjectID);
     if (!foundObject) return;
@@ -113,7 +100,7 @@ export default function Provider({ children }: { children: React.ReactNode }) {
         },
       ];
     }
-    setPageData({ pageName: currentPageName, data: updatedPageData });
+    setPageData(updatedPageData);
   };
   const handleFile = (name: string) => {
     switch (name) {
@@ -121,29 +108,29 @@ export default function Provider({ children }: { children: React.ReactNode }) {
         localStorage.setItem("pageJson", JSON.stringify(pageData));
         break;
       }
-      case "load": {
-        const loadData = localStorage.getItem("pageJson");
-        if (loadData) {
-          setPageData({
-            pageName: currentPageName,
-            data: JSON.parse(loadData),
-          });
-        }
-        break;
-      }
-      case "clear": {
-        setPageData({
-          pageName: currentPageName,
-          data: [
-            {
-              id: "default",
-              type: "div",
-            },
-          ],
-        });
-        localStorage.clear();
-        break;
-      }
+      // case "load": {
+      //   const loadData = localStorage.getItem("pageJson");
+      //   if (loadData) {
+      //     setPageData({
+      //       pageName: currentPageName,
+      //       data: JSON.parse(loadData),
+      //     });
+      //   }
+      //   break;
+      // }
+      // case "clear": {
+      //   setPageData({
+      //     pageName: currentPageName,
+      //     data: [
+      //       {
+      //         id: "default",
+      //         type: "div",
+      //       },
+      //     ],
+      //   });
+      //   localStorage.clear();
+      //   break;
+      // }
       case "component": {
         // setPageData({
         //   pageName: currentPageName,
@@ -155,7 +142,7 @@ export default function Provider({ children }: { children: React.ReactNode }) {
         //     },
         //   ],
         // });
-        addElement("div", selectedID);
+        // addElement("div", selectedID);
         // localStorage.setItem("component", JSON.stringify(pageData));
         break;
       }
@@ -163,6 +150,7 @@ export default function Provider({ children }: { children: React.ReactNode }) {
   };
 
   useEffect(() => {
+    if (isEmpty(pageData)) return;
     globalEmitter.on("click", handleAddElement);
     globalEmitter.on("style", handleAddStyle);
     globalEmitter.on("text", handleAddText);
@@ -176,7 +164,7 @@ export default function Provider({ children }: { children: React.ReactNode }) {
       globalEmitter.off("delete", deleteElement);
       globalEmitter.off("text", handleAddText);
     };
-  }, [pageData, selectedID]);
+  }, [globalEmitter, selectedID, pageData, currentPageName]);
 
   const getID = (ev: React.MouseEvent<HTMLDivElement>) => {
     if (ev.target instanceof Element) {
@@ -195,15 +183,16 @@ export default function Provider({ children }: { children: React.ReactNode }) {
     }
   };
   const drop = (ev: React.DragEvent<HTMLElement>) => {
-    if (!pageData) return;
-    const newData = [...pageData];
+    if (isEmpty(pageData)) return;
 
+    const newData = [...pageData];
     const x = ev.clientX;
     const y = ev.clientY;
 
     const dragTarget = ev.target as HTMLElement;
     const dropTarget = document.elementFromPoint(x, y);
     const dragObj = getElementById(newData, dragTarget.id);
+    if (selectedID === dragTarget.id) return;
     const updatedArray = removeElementById([...newData], dragTarget.id);
     const dropObj = getElementById(updatedArray, dropTarget?.id || "");
     if (!dropObj) return;
@@ -218,22 +207,22 @@ export default function Provider({ children }: { children: React.ReactNode }) {
       ];
     }
     if (updatedArray) {
-      setPageData({ pageName: currentPageName, data: updatedArray });
+      setPageData(updatedArray);
     }
   };
 
   useEffect(() => {
     // 바뀐 json을 렌더해주는 부분
-    if (!pageData) return;
+    if (isEmpty(pageData)) return;
     parseElementsToHTML(pageData);
-  }, [pageData]);
+  }, [pageData, currentPageName]);
 
   return (
     <div
       id="init"
       onClick={getID}
       style={{ height: "100vh", width: "100vw" }}
-      draggable={true}
+      draggable={false}
       onDragEnd={drop}
     >
       {children}

@@ -10,7 +10,7 @@ export interface ElementStructure {
 }
 
 export default function useRender() {
-  function createHTMLElement(elementData: ElementStructure): HTMLElement {
+  const createHTMLElement = (elementData: ElementStructure): HTMLElement => {
     const element = document.createElement(elementData.type);
     element.draggable = true;
     element.id = elementData.id;
@@ -24,7 +24,6 @@ export default function useRender() {
         element.style[key as any] = styles[key];
       }
     }
-
     if (elementData.text) {
       element.textContent = elementData.text;
     }
@@ -36,9 +35,9 @@ export default function useRender() {
       // return element;
     }
     return element;
-  }
+  };
 
-  function parseElementsToHTML(elements: ElementStructure[]): void {
+  const parseElementsToHTML = (elements: ElementStructure[]) => {
     const container = document.getElementById("init");
     while (container?.firstChild) {
       container.removeChild(container.firstChild);
@@ -49,7 +48,7 @@ export default function useRender() {
         container.appendChild(element);
       });
     }
-  }
+  };
 
   return { parseElementsToHTML };
 }
