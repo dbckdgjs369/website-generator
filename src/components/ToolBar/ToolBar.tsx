@@ -81,7 +81,7 @@ export default function ToolBar() {
       globalEmitter.off("element_text", handleText);
     };
   }, []);
-  const [componentList, setComponentList] = useState([]);
+  const [, setComponentList] = useState([]);
   const loadData = localStorage.getItem("component");
   useEffect(() => {
     if (loadData) {
