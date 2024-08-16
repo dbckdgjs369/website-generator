@@ -1,11 +1,10 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import { useNavigate, useRoutes } from "react-router-dom";
 
 import Layout from "./layout/Layout";
-import { useEffect } from "react";
 import EditorPage from "./pages/Mainpage/EditorPage";
 import TestPage from "./pages/Mainpage/TestPage";
 import ComponentPage from "./pages/ComponentPage/ComponentPage";
+import { useEffect } from "react";
 
 const PATHS = {
   main: "/main",
@@ -16,10 +15,12 @@ const PATHS = {
 const withLayout = (element: React.ReactNode) => <Layout>{element}</Layout>;
 
 export default function Router() {
-  // const navigate = useNavigate();
-  // useEffect(() => {
-  //   navigate("main", { replace: true });
-  // }, []);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    navigate("main", { replace: true });
+  }, []);
+
   return useRoutes([
     {
       path: PATHS.main,
