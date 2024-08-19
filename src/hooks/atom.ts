@@ -16,7 +16,11 @@ const PageList = atom<Record<string, ElementStructure[]>>({
   main: [{ ...DEFULAT_PAGE }],
 });
 
-const Page = atomFamily((pageName: string) =>
+const ComponentList = atom<Record<string, ElementStructure[]>>({
+  main: [{ ...DEFULAT_PAGE }],
+});
+
+const PageAtom = atomFamily((pageName: string) =>
   atom(
     (get) => get(PageList)[pageName] ?? [DEFULAT_PAGE],
     (get, set, update: ElementStructure[]) => {
@@ -31,4 +35,19 @@ const Page = atomFamily((pageName: string) =>
   )
 );
 
-export { Page };
+const ComponentAtom = atomFamily((componentName: string) =>
+  atom(
+    (get) => get(ComponentList)[componentName] ?? {},
+    (get, set, update: ElementStructure[]) => {
+      const prev = get(ComponentList);
+      if (prev) {
+        set(ComponentList, {
+          ...prev,
+          [componentName]: [...update],
+        });
+      }
+    }
+  )
+);
+
+export { PageAtom, ComponentAtom };
