@@ -7,6 +7,7 @@ import { useGlobalEventEmitter } from "../../provider/GlobalEventProvider/Global
 // import { allHtmlTags } from "../../constant/constant";
 
 export default function ToolBar() {
+  // const [currentDirection, setCurrentDirection] = useState("row");
   const [tagList] = useState<string[]>(["div", "button"]);
   const [elementStyle, setElementStyle] = useState<string>("");
   const [elementText, setElementText] = useState("");
@@ -90,6 +91,40 @@ export default function ToolBar() {
     }
   }, [loadData]);
 
+  const handelAlign = (ev: React.MouseEvent<HTMLButtonElement>) => {
+    const { id } = ev.currentTarget;
+    let alignStyle = "";
+    if (id.includes("left")) {
+      alignStyle += "justify-content:start;";
+    }
+    if (id.includes("center")) {
+      alignStyle += "justify-content:center;";
+    }
+    if (id.includes("right")) {
+      alignStyle += "justify-content: end;";
+    }
+    if (id.includes("top")) {
+      alignStyle += "align-items: start;";
+    }
+    if (id.includes("middle")) {
+      alignStyle += "align-items:center;";
+    }
+    if (id.includes("bottom")) {
+      alignStyle += "align-items:end;";
+    }
+
+    switch (id) {
+      case "row": {
+        alignStyle += "flex-direction: row;";
+        break;
+      }
+      case "column": {
+        alignStyle += "flex-direction: column;";
+        break;
+      }
+    }
+    globalEmitter.emit("style", styleTextareaRef.current?.value + alignStyle);
+  };
   return (
     <S.ToolBarWrapper>
       <S.CurrentWrapper>
@@ -100,6 +135,50 @@ export default function ToolBar() {
           value={elementStyle}
           onChange={(ev) => setElementStyle(ev.target.value)}
         />
+        <div>
+          <button id="row" onClick={handelAlign}>
+            row
+          </button>
+          <button id="column" onClick={handelAlign}>
+            column
+          </button>
+        </div>
+        <div
+          style={{
+            display: "grid",
+            gap: "10px",
+            gridTemplateColumns: "repeat(3, 1fr)",
+            gridTemplateRows: "repeat(3, 1fr)",
+          }}
+        >
+          <button id="top_left" onClick={handelAlign}>
+            top left
+          </button>
+          <button id="top_center" onClick={handelAlign}>
+            top center
+          </button>
+          <button id="top_right" onClick={handelAlign}>
+            top right
+          </button>
+          <button id="middle_left" onClick={handelAlign}>
+            middle left
+          </button>
+          <button id="middle_center" onClick={handelAlign}>
+            middle center
+          </button>
+          <button id="middle_right" onClick={handelAlign}>
+            middle right
+          </button>
+          <button id="bottom_left" onClick={handelAlign}>
+            bottom left
+          </button>
+          <button id="bottom_center" onClick={handelAlign}>
+            bottom center
+          </button>
+          <button id="bottom_right" onClick={handelAlign}>
+            bottom right
+          </button>
+        </div>
         <button onClick={addStyle}>직접 스타일 추가</button>
         <textarea
           placeholder="추가하실 문구를 입력하세요"
