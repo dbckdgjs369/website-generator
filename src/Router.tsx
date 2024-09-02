@@ -1,27 +1,26 @@
-import { useNavigate, useRoutes } from "react-router-dom";
+import { useRoutes } from "react-router-dom";
 
 import Layout from "./layout/Layout";
 import EditorPage from "./pages/Mainpage/EditorPage";
 import TestPage from "./pages/Mainpage/TestPage";
 import ComponentPage from "./pages/ComponentPage/ComponentPage";
-import { useEffect } from "react";
+import ResultPage from "./pages/ResultPage/ResultPage";
 
 const PATHS = {
   main: "/main",
   test: "/test",
   component: "/component",
+  result: "",
 };
 
 const withLayout = (element: React.ReactNode) => <Layout>{element}</Layout>;
 
 export default function Router() {
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    navigate("main", { replace: true });
-  }, []);
-
   return useRoutes([
+    {
+      path: PATHS.result,
+      element: <ResultPage />,
+    },
     {
       path: PATHS.main,
       element: withLayout(<EditorPage />),

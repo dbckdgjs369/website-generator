@@ -212,6 +212,7 @@ export default function ToolBar() {
       </S.ButtonWrapper>
       <S.Button onClick={() => navigate("/component")}>make component</S.Button>
       <S.Button onClick={() => navigate("/main")}>return to main</S.Button>
+      <S.Button onClick={() => navigate("/")}>see result</S.Button>
       {location.pathname.includes("component") ? (
         <S.Button id="component" onClick={handleButtonClick}>
           저장하기
