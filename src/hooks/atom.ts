@@ -3,7 +3,7 @@ import { atomFamily } from "jotai/utils";
 
 import { ElementStructure } from "./useRender";
 
-const DEFULAT_PAGE: ElementStructure = {
+const DEFAULT_PAGE: ElementStructure = {
   id: "default",
   type: "div",
   style: {
@@ -13,22 +13,31 @@ const DEFULAT_PAGE: ElementStructure = {
 };
 
 const PageList = atom<Record<string, ElementStructure[]>>({
-  main: [{ ...DEFULAT_PAGE }],
+  main: [{ ...DEFAULT_PAGE }],
 });
 
 const ComponentList = atom<Record<string, ElementStructure[]>>({
-  main: [{ ...DEFULAT_PAGE }],
+  main: [{ ...DEFAULT_PAGE }],
 });
 
 const PageAtom = atomFamily((pageName: string) =>
   atom(
-    (get) => get(PageList)[pageName] ?? [DEFULAT_PAGE],
+    (get) => {
+      const pageData = get(PageList)[pageName] ?? [
+        JSON.parse(JSON.stringify(DEFAULT_PAGE)),
+      ];
+      return pageData;
+    },
     (get, set, update: ElementStructure[]) => {
       const prev = get(PageList);
       if (prev) {
         set(PageList, {
           ...prev,
           [pageName]: [...update],
+        });
+      } else {
+        set(PageList, {
+          [pageName]: [JSON.parse(JSON.stringify(DEFAULT_PAGE))],
         });
       }
     }

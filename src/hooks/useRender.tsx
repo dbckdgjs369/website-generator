@@ -7,6 +7,7 @@ export interface ElementStructure {
   inner?: ElementStructure[];
   style?: CSSStyleDeclaration | StringKeyStringValueObject;
   text?: string;
+  events?: string;
 }
 
 export default function useRender() {
@@ -34,6 +35,11 @@ export default function useRender() {
       });
       // return element;
     }
+    // if (elementData.events) {
+    //   element.addEventListener("click", () => {
+    //     fetch("https://jsonplaceholder.typicode.com/todos/1");
+    //   });
+    // }
     return element;
   };
 

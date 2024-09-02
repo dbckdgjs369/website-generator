@@ -9,7 +9,7 @@ import ResultPage from "./pages/ResultPage/ResultPage";
 const PATHS = {
   main: "/main",
   test: "/test",
-  component: "/component",
+  component: "/component/*",
   result: "",
 };
 

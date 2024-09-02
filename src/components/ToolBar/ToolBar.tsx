@@ -11,9 +11,10 @@ export default function ToolBar() {
   const [tagList] = useState<string[]>(["div", "button"]);
   const [elementStyle, setElementStyle] = useState<string>("");
   const [elementText, setElementText] = useState("");
+  const [componentName, setComponentName] = useState("");
   const globalEmitter = useGlobalEventEmitter();
   const styleTextareaRef = useRef<HTMLTextAreaElement>(null);
-  const textTextareaRef = useRef<HTMLTextAreaElement>(null);
+  const textInputRef = useRef<HTMLInputElement>(null);
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -29,7 +30,7 @@ export default function ToolBar() {
 
   const addText = (ev: React.MouseEvent<HTMLButtonElement>) => {
     ev.preventDefault();
-    globalEmitter.emit("text", textTextareaRef.current?.value);
+    globalEmitter.emit("text", textInputRef.current?.value);
   };
 
   const handleButtonClick = (ev: React.MouseEvent<HTMLButtonElement>) => {
@@ -45,7 +46,7 @@ export default function ToolBar() {
         break;
       }
       case "text": {
-        globalEmitter.emit(id, textTextareaRef.current?.value);
+        globalEmitter.emit(id, textInputRef.current?.value);
         break;
       }
       case "save":
@@ -180,10 +181,9 @@ export default function ToolBar() {
           </button>
         </div>
         <button onClick={addStyle}>직접 스타일 추가</button>
-        <textarea
+        <input
           placeholder="추가하실 문구를 입력하세요"
-          style={{ height: "200px" }}
-          ref={textTextareaRef}
+          ref={textInputRef}
           value={elementText}
           onChange={(ev) => setElementText(ev.target.value)}
         />
@@ -210,7 +210,16 @@ export default function ToolBar() {
           load
         </S.Button>
       </S.ButtonWrapper>
-      <S.Button onClick={() => navigate("/component")}>make component</S.Button>
+      <div>
+        <input onChange={(ev) => setComponentName(ev.target.value)} />
+        <S.Button
+          onClick={() => {
+            navigate(`/component/${componentName}`);
+          }}
+        >
+          make component
+        </S.Button>
+      </div>
       <S.Button onClick={() => navigate("/main")}>return to main</S.Button>
       <S.Button onClick={() => navigate("/")}>see result</S.Button>
       {location.pathname.includes("component") ? (

@@ -21,7 +21,7 @@ export default function Provider({ children }: { children: React.ReactNode }) {
   const [selectedID, setSelectedID] = useState("default");
   const location = useLocation();
 
-  const currentPageName = location.pathname.replace("/", "") ?? "main";
+  const currentPageName = location.pathname.split("component/")[1] ?? "main";
   const { pageData, updatePageData: setPageData } =
     usePageData(currentPageName);
   const { parseElementsToHTML } = useRender();
