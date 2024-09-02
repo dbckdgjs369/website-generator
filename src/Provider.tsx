@@ -14,7 +14,7 @@ const DEFAULT_STYLE = {
   border: "1px solid black",
   width: "100%",
   fontSize: "30px",
-  minHeight: "40px",
+  height: "40px",
 };
 
 export default function Provider({ children }: { children: React.ReactNode }) {
@@ -168,18 +168,20 @@ export default function Provider({ children }: { children: React.ReactNode }) {
 
   const getID = (ev: React.MouseEvent<HTMLDivElement>) => {
     if (ev.target instanceof Element) {
-      if (ev.target.id === "init") {
+      const id = ev.target.id;
+      if (id === "init") {
         setSelectedID("default");
       } else {
-        const id = ev.target.id;
-        const prevElement = document.getElementById(selectedID); // 만약에 점선 유지시키고 싶으면 json에 넣어서 이거 사용해야 됌
-        const selectedElement = document.getElementById(id);
-        if (!prevElement) return;
-        if (!selectedElement) return;
-        prevElement?.removeAttribute("class");
-        selectedElement?.setAttribute("class", "selected");
         setSelectedID(id);
       }
+      const prevElement = document.getElementById(
+        selectedID === "default" ? "init" : selectedID
+      );
+      const selectedElement = document.getElementById(id);
+      if (!prevElement) return;
+      if (!selectedElement) return;
+      prevElement?.removeAttribute("class");
+      selectedElement?.setAttribute("class", "selected");
     }
   };
   const drop = (ev: React.DragEvent<HTMLElement>) => {
