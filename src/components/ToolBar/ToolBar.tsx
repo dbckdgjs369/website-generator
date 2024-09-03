@@ -3,6 +3,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 
 import * as S from "./emotion";
 import { useGlobalEventEmitter } from "../../provider/GlobalEventProvider/GlobalEventEmitterContext";
+import usePageData from "../../hooks/usePageData";
 
 // import { allHtmlTags } from "../../constant/constant";
 
@@ -16,6 +17,7 @@ export default function ToolBar() {
   const styleTextareaRef = useRef<HTMLTextAreaElement>(null);
   const textInputRef = useRef<HTMLInputElement>(null);
   const navigate = useNavigate();
+  const { pageList } = usePageData("");
   const location = useLocation();
 
   const handleButton = (ev: React.MouseEvent<HTMLButtonElement>) => {
@@ -190,12 +192,13 @@ export default function ToolBar() {
         <button onClick={addText}>문구 추가</button>
       </S.CurrentWrapper>
       <S.CurrentWrapper>
-        {tagList.map((tag) => (
+        {[...tagList, ...Object.keys(pageList)].map((tag) => (
           <button onClick={(ev) => handleButton(ev)} id={tag} key={tag}>
             {tag}
           </button>
         ))}
       </S.CurrentWrapper>
+
       <button onClick={handleButtonClick} id="delete">
         delete
       </button>
@@ -220,6 +223,11 @@ export default function ToolBar() {
           make component
         </S.Button>
       </div>
+      <select onChange={(ev) => console.log(ev.target.value)}>
+        {Object.keys(pageList).map((component) => (
+          <option>{component}</option>
+        ))}
+      </select>
       <S.Button onClick={() => navigate("/main")}>return to main</S.Button>
       <S.Button onClick={() => navigate("/")}>see result</S.Button>
       {location.pathname.includes("component") ? (

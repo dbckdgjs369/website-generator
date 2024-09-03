@@ -1,7 +1,7 @@
-import { useAtom } from "jotai";
+import { useAtom, useAtomValue } from "jotai";
 
 import { ElementStructure } from "./useRender";
-import { PageAtom } from "./atom";
+import { PageAtom, PageList } from "./atom";
 
 export default function usePageData(pageName: string) {
   const [pageData, setPageData] = useAtom(PageAtom(pageName));
@@ -10,5 +10,7 @@ export default function usePageData(pageName: string) {
     setPageData(newData);
   };
 
-  return { pageData, updatePageData };
+  const pageList = useAtomValue(PageList);
+
+  return { pageData, updatePageData, pageList };
 }

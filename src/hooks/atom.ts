@@ -12,11 +12,11 @@ const DEFAULT_PAGE: ElementStructure = {
   },
 };
 
-const PageList = atom<Record<string, ElementStructure[]>>({
+export const PageList = atom<Record<string, ElementStructure[]>>({
   main: [{ ...DEFAULT_PAGE }],
 });
 
-const ComponentList = atom<Record<string, ElementStructure[]>>({
+export const ComponentList = atom<Record<string, ElementStructure[]>>({
   main: [{ ...DEFAULT_PAGE }],
 });
 
