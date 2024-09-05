@@ -22,8 +22,13 @@ export default function Provider({ children }: { children: React.ReactNode }) {
   const location = useLocation();
 
   const currentPageName = location.pathname.split("component/")[1] ?? "main";
-  const { pageData, updatePageData: setPageData } =
-    usePageData(currentPageName);
+  const {
+    pageData,
+    updatePageData: setPageData,
+    pageList,
+  } = usePageData(currentPageName);
+  console.log(":pageData", pageData);
+
   const { parseElementsToHTML } = useRender();
   const { getElementById, removeElementById } = useHandleStructure();
   const globalEmitter = useGlobalEventEmitter();
@@ -36,6 +41,9 @@ export default function Provider({ children }: { children: React.ReactNode }) {
 
   const handleAddElement = (name: HTMLTag) => {
     addElement(name, selectedID);
+  };
+  const handleAddComponent = (name: string) => {
+    addComponent(name, selectedID);
   };
 
   const handleAddStyle = (styleFromToolBar: string) => {
@@ -77,6 +85,23 @@ export default function Provider({ children }: { children: React.ReactNode }) {
     setSelectedID("default");
   };
 
+  console.log("::pageList", pageList);
+  const addComponent = (componentName: string, targetObjectID: string) => {
+    if (isEmpty(pageData)) return;
+    const updatedPageData = [...pageData];
+    const foundObject = getElementById(pageData, targetObjectID);
+    const [component] = pageList[componentName];
+    if (!component.inner) return;
+    const [inner] = component.inner;
+    if (!foundObject) return;
+    if (foundObject.inner) {
+      foundObject.inner.push({ ...inner, id: generateRandomString(10) });
+    } else {
+      foundObject.inner = [{ ...inner, id: generateRandomString(10) }];
+    }
+    setPageData(updatedPageData);
+  };
+
   const addElement = (addObjectTag: HTMLTag, targetObjectID: string) => {
     // id를 가진 요소에 object Tag를 추가해줌
     if (isEmpty(pageData)) return;
@@ -102,6 +127,7 @@ export default function Provider({ children }: { children: React.ReactNode }) {
     }
     setPageData(updatedPageData);
   };
+
   const handleFile = (name: string) => {
     switch (name) {
       case "save": {
@@ -151,14 +177,16 @@ export default function Provider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     if (isEmpty(pageData)) return;
-    globalEmitter.on("click", handleAddElement);
+    globalEmitter.on("add", handleAddElement);
+    globalEmitter.on("component", handleAddComponent);
     globalEmitter.on("style", handleAddStyle);
     globalEmitter.on("text", handleAddText);
     globalEmitter.on("file", handleFile);
     globalEmitter.on("delete", deleteElement);
     getSelectedElementInfo(selectedID);
     return () => {
-      globalEmitter.off("click", handleAddElement);
+      globalEmitter.off("add", handleAddElement);
+      globalEmitter.off("component", handleAddComponent);
       globalEmitter.off("style", handleAddStyle);
       globalEmitter.off("file", handleFile);
       globalEmitter.off("delete", deleteElement);

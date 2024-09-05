@@ -22,7 +22,10 @@ export default function ToolBar() {
 
   const handleButton = (ev: React.MouseEvent<HTMLButtonElement>) => {
     ev.preventDefault();
-    globalEmitter.emit("click", ev.currentTarget.id);
+    globalEmitter.emit("add", ev.currentTarget.id);
+  };
+  const addComponent = (name: string) => {
+    globalEmitter.emit("component", name);
   };
 
   const addStyle = (ev: React.MouseEvent<HTMLButtonElement>) => {
@@ -133,11 +136,12 @@ export default function ToolBar() {
       <S.CurrentWrapper>
         <textarea
           placeholder="추가하실 스타일을 입력하세요"
-          style={{ height: "200px" }}
+          style={{ height: "150px" }}
           ref={styleTextareaRef}
           value={elementStyle}
           onChange={(ev) => setElementStyle(ev.target.value)}
         />
+        <button onClick={addStyle}>직접 스타일 추가</button>
         <div>
           <button id="row" onClick={handelAlign}>
             row
@@ -182,7 +186,7 @@ export default function ToolBar() {
             bottom right
           </button>
         </div>
-        <button onClick={addStyle}>직접 스타일 추가</button>
+
         <input
           placeholder="추가하실 문구를 입력하세요"
           ref={textInputRef}
@@ -192,8 +196,13 @@ export default function ToolBar() {
         <button onClick={addText}>문구 추가</button>
       </S.CurrentWrapper>
       <S.CurrentWrapper>
-        {[...tagList, ...Object.keys(pageList)].map((tag) => (
+        {[...tagList].map((tag) => (
           <button onClick={(ev) => handleButton(ev)} id={tag} key={tag}>
+            {tag}
+          </button>
+        ))}
+        {[...Object.keys(pageList)].map((tag) => (
+          <button onClick={() => addComponent(tag)} id={tag} key={tag}>
             {tag}
           </button>
         ))}
