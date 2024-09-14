@@ -5,11 +5,13 @@ import EditorPage from "./pages/Mainpage/EditorPage";
 import TestPage from "./pages/Mainpage/TestPage";
 import ComponentPage from "./pages/ComponentPage/ComponentPage";
 import ResultPage from "./pages/ResultPage/ResultPage";
+import DNDPage from "./pages/DNDPage/DNDPage";
 
 const PATHS = {
   main: "/main",
   test: "/test",
   component: "/component/*",
+  dnd: "/dnd",
   result: "",
 };
 
@@ -32,6 +34,10 @@ export default function Router() {
     {
       path: PATHS.component,
       element: withLayout(<ComponentPage />),
+    },
+    {
+      path: PATHS.dnd,
+      element: <DNDPage />,
     },
   ]);
 }
