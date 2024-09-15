@@ -15,7 +15,9 @@ const PATHS = {
   result: "",
 };
 
-const withLayout = (element: React.ReactNode) => <Layout>{element}</Layout>;
+const withToolBarLayout = (element: React.ReactNode) => (
+  <Layout>{element}</Layout>
+);
 
 export default function Router() {
   return useRoutes([
@@ -25,19 +27,19 @@ export default function Router() {
     },
     {
       path: PATHS.main,
-      element: withLayout(<EditorPage />),
+      element: withToolBarLayout(<EditorPage />),
     },
     {
       path: PATHS.test,
-      element: withLayout(<TestPage />),
+      element: withToolBarLayout(<TestPage />),
     },
     {
       path: PATHS.component,
-      element: withLayout(<ComponentPage />),
+      element: withToolBarLayout(<ComponentPage />),
     },
     {
       path: PATHS.dnd,
-      element: <DNDPage />,
+      element: withToolBarLayout(<DNDPage />),
     },
   ]);
 }
