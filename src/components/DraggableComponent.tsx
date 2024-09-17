@@ -24,6 +24,7 @@ export default function DraggableComponent({
 
   // 드래그 끝났을 때 호출되는 함수
   const handleStop = (_: DraggableEvent, data: DraggableData) => {
+    console.log("::?");
     const snappedPosition = snapToGrid({ x: data.x, y: data.y });
     setPosition(snappedPosition);
   };

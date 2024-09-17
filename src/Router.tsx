@@ -6,6 +6,7 @@ import TestPage from "./pages/Mainpage/TestPage";
 import ComponentPage from "./pages/ComponentPage/ComponentPage";
 import ResultPage from "./pages/ResultPage/ResultPage";
 import DNDPage from "./pages/DNDPage/DNDPage";
+import LayoutWithComponent from "./layout/LayoutWithComponent";
 
 const PATHS = {
   main: "/main",
@@ -17,6 +18,10 @@ const PATHS = {
 
 const withToolBarLayout = (element: React.ReactNode) => (
   <Layout>{element}</Layout>
+);
+
+const withToolBarLayout2 = (element: React.ReactNode) => (
+  <LayoutWithComponent>{element}</LayoutWithComponent>
 );
 
 export default function Router() {
@@ -31,7 +36,7 @@ export default function Router() {
     },
     {
       path: PATHS.test,
-      element: withToolBarLayout(<TestPage />),
+      element: withToolBarLayout2(<TestPage />),
     },
     {
       path: PATHS.component,
@@ -39,7 +44,7 @@ export default function Router() {
     },
     {
       path: PATHS.dnd,
-      element: withToolBarLayout(<DNDPage />),
+      element: <DNDPage />,
     },
   ]);
 }

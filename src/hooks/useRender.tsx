@@ -8,6 +8,7 @@ export interface ElementStructure {
   style?: CSSStyleDeclaration | StringKeyStringValueObject;
   text?: string;
   events?: string;
+  root?: boolean;
 }
 
 export default function useRender() {
