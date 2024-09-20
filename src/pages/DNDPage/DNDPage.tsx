@@ -10,7 +10,8 @@ export default function DNDPage() {
     newElement.style.position = "absolute"; // 필수적인 스타일 설정
     // newElement.style.top = "100px"; // 초기 위치 설정
     // newElement.style.left = "100px"; // 초기 위치 설정
-
+    newElement.style["width"] = "0px";
+    newElement.style["height"] = "0px";
     // 생성된 div를 body에 추가
     document.body.appendChild(newElement);
 

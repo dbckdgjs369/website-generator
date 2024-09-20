@@ -1,5 +1,6 @@
 import { useState } from "react";
 import Draggable, { DraggableData, DraggableEvent } from "react-draggable";
+// import { useGlobalEventEmitter } from "../provider/GlobalEventProvider/GlobalEventEmitterContext";
 
 const gridSize = 50; // 그리드 크기
 
@@ -10,6 +11,7 @@ export default function DraggableComponent({
   id: string;
   children: React.ReactNode;
 }) {
+  // const globalEmitter = useGlobalEventEmitter();
   const [position, setPosition] = useState<{ x: number; y: number }>({
     x: 0,
     y: 0,
@@ -23,15 +25,16 @@ export default function DraggableComponent({
   };
 
   // 드래그 끝났을 때 호출되는 함수
-  const handleStop = (_: DraggableEvent, data: DraggableData) => {
-    console.log("::?");
+  const handleStop = (ev: DraggableEvent, data: DraggableData) => {
+    console.log("ev", ev);
     const snappedPosition = snapToGrid({ x: data.x, y: data.y });
     setPosition(snappedPosition);
+    // globalEmitter.emit("style", position);
   };
 
   return (
     <Draggable position={position} onStop={handleStop}>
-      <div id={`draggable-box-${id}`} className={`draggable-box-${id}`}>
+      <div id={id} className={id}>
         {children}
       </div>
     </Draggable>
