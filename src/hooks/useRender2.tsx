@@ -1,8 +1,9 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { createRoot } from "react-dom/client";
 import DraggableComponent from "../components/DraggableComponent";
-import { generateRandomString } from "../utils/utils";
 import { ReactNode } from "react";
 import Input from "../componentList/Input";
+import { useGlobalEventEmitter } from "../provider/GlobalEventProvider/GlobalEventEmitterContext";
 
 type StringKeyStringValueObject = {
   [key: string]: string | { [key: string]: string };
@@ -14,6 +15,7 @@ export interface ElementStructure {
   style?: CSSStyleDeclaration | StringKeyStringValueObject;
   text?: string;
   events?: string;
+  position?: { x: number; y: number };
   root?: boolean;
 }
 
@@ -22,9 +24,18 @@ const COMPONENT_MAP = {
 };
 
 export default function useRender2() {
-  const createDraggableElement = (component: ReactNode) => {
+  const g = useGlobalEventEmitter();
+  const createDraggableElement = ({
+    id,
+    position,
+    component,
+  }: {
+    id: string;
+    position: any;
+    component: ReactNode;
+  }) => {
     // 새로운 div 요소 생성
-    console.log(":::??");
+    console.log("::here?", component);
     const newElement = document.createElement("div");
     newElement.style["width"] = "0px";
     newElement.style["height"] = "0px";
@@ -38,15 +49,36 @@ export default function useRender2() {
     // React 컴포넌트를 새로 생성된 div에 렌더링
     const root = createRoot(newElement);
     root.render(
-      <DraggableComponent id={generateRandomString(10)}>
+      <DraggableComponent
+        position={position}
+        emitter={g}
+        id={id}
+        handlePosition={(pos) => console.log("pos", pos)}
+      >
         {component}
       </DraggableComponent>
     );
   };
   const createHTMLElement = (elementData: ElementStructure) => {
     if (elementData.root) {
-      console.log(":::here??", elementData.type);
-      createDraggableElement(COMPONENT_MAP[elementData.type as "input"]);
+      createDraggableElement({
+        id: elementData.id,
+        position: elementData.position,
+        component: COMPONENT_MAP[elementData.type as "input"],
+      });
+      // if (elementData.position) {
+      //   const e = document.getElementById(elementData.id);
+      //   console.log("::elementData.id", elementData.id, e);
+      //   if (e) {
+      //     console.log(
+      //       "position",
+      //       `translate(${elementData.position.x}px,${elementData.position.y}px)`
+      //     );
+      //     e.style[
+      //       "transform"
+      //     ] = `translate(${elementData.position.x}px,${elementData.position.y}px)`;
+      //   }
+      // }
       return;
     }
     const element = document.createElement(elementData.type);
@@ -74,11 +106,6 @@ export default function useRender2() {
       });
       // return element;
     }
-    // if (elementData.events) {
-    //   element.addEventListener("click", () => {
-    //     fetch("https://jsonplaceholder.typicode.com/todos/1");
-    //   });
-    // }
     return element;
   };
 

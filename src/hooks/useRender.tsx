@@ -8,6 +8,7 @@ export interface ElementStructure {
   style?: CSSStyleDeclaration | StringKeyStringValueObject;
   text?: string;
   events?: string;
+  position?: { x: number; y: number };
   root?: boolean;
 }
 
