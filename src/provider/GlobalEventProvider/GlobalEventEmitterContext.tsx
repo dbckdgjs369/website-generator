@@ -2,7 +2,7 @@
 import React, { createContext, useContext } from "react";
 import EventEmitter from "eventemitter3";
 
-type GlobalEmitterType = EventEmitter<string, any>;
+export type GlobalEmitterType = EventEmitter<string, any>;
 
 const GlobalEventEmitterContext = createContext<GlobalEmitterType | undefined>(
   undefined
