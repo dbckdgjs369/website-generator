@@ -18,7 +18,7 @@ export default function DNDPage() {
     // React 컴포넌트를 새로 생성된 div에 렌더링
     const root = createRoot(newElement);
     root.render(
-      <DraggableComponent id="24">
+      <DraggableComponent id="24" position={{ x: 0, y: 0 }}>
         <div
           style={{
             width: "100px",
@@ -51,13 +51,13 @@ export default function DNDPage() {
       <button onClick={createDraggableElement}>Draggable 컴포넌트 추가</button>
       <div style={{ display: "flex", flexDirection: "row" }}></div>
       <Column>
-        <DraggableComponent id="1">
+        <DraggableComponent id="1" position={{ x: 0, y: 0 }}>
           <div style={{ width: "100%", height: "100px", background: "black" }}>
             Header
           </div>
         </DraggableComponent>
         <Row>
-          <DraggableComponent id="3">
+          <DraggableComponent id="3" position={{ x: 0, y: 0 }}>
             <div
               style={{
                 width: "300px",

@@ -13,8 +13,8 @@ export default function DraggableComponent({
 }: {
   id: string;
   position: { x: number; y: number };
-  emitter: GlobalEmitterType;
-  handlePosition: (position: { x: number; y: number }) => void;
+  emitter?: GlobalEmitterType;
+  handlePosition?: (position: { x: number; y: number }) => void;
   children: React.ReactNode;
 }) {
   // const [position, setPosition] = useState<{ x: number; y: number }>({
@@ -35,8 +35,8 @@ export default function DraggableComponent({
     const snappedPosition = snapToGrid({ x: data.x, y: data.y });
     // setPosition(snappedPosition);
     console.log(":::drag end position", snappedPosition);
-    handlePosition(snappedPosition);
-    emitter.emit("test", snappedPosition, id);
+    handlePosition?.(snappedPosition);
+    emitter?.emit("test", snappedPosition, id);
     // console.log("::eventEmitter", eventEmitter);
     // eventEmitter?.emit("test", snappedPosition);
   };
