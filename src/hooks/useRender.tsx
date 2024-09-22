@@ -1,6 +1,8 @@
 type StringKeyStringValueObject = {
   [key: string]: string | { [key: string]: string };
 };
+
+export type Position = { x: number; y: number };
 export interface ElementStructure {
   id: string;
   type: keyof HTMLElementTagNameMap;
@@ -8,7 +10,7 @@ export interface ElementStructure {
   style?: CSSStyleDeclaration | StringKeyStringValueObject;
   text?: string;
   events?: string;
-  position?: { x: number; y: number };
+  position?: Position;
   root?: boolean;
 }
 

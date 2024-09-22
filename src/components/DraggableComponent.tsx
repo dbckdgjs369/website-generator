@@ -1,6 +1,7 @@
-// import { useState } from "react";
 import Draggable, { DraggableData, DraggableEvent } from "react-draggable";
+
 import { GlobalEmitterType } from "../provider/GlobalEventProvider/GlobalEventEmitterContext";
+import { Position } from "../hooks/useRender";
 
 const gridSize = 50; // 그리드 크기
 
@@ -12,18 +13,13 @@ export default function DraggableComponent({
   children,
 }: {
   id: string;
-  position: { x: number; y: number };
+  position: Position;
   emitter?: GlobalEmitterType;
-  handlePosition?: (position: { x: number; y: number }) => void;
+  handlePosition?: (position: Position) => void;
   children: React.ReactNode;
 }) {
-  // const [position, setPosition] = useState<{ x: number; y: number }>({
-  //   x: 0,
-  //   y: 0,
-  // });
-
   // 위치 보정 함수
-  const snapToGrid = (pos: { x: number; y: number }) => {
+  const snapToGrid = (pos: Position) => {
     const newX = Math.round(pos.x / gridSize) * gridSize;
     const newY = Math.round(pos.y / gridSize) * gridSize;
     return { x: newX, y: newY };
@@ -33,12 +29,8 @@ export default function DraggableComponent({
   const handleStop = (ev: DraggableEvent, data: DraggableData) => {
     ev.preventDefault();
     const snappedPosition = snapToGrid({ x: data.x, y: data.y });
-    // setPosition(snappedPosition);
-    console.log(":::drag end position", snappedPosition);
     handlePosition?.(snappedPosition);
-    emitter?.emit("test", snappedPosition, id);
-    // console.log("::eventEmitter", eventEmitter);
-    // eventEmitter?.emit("test", snappedPosition);
+    emitter?.emit("position", snappedPosition, id);
   };
 
   return (
