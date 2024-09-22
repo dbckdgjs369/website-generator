@@ -4,6 +4,7 @@ import DraggableComponent from "../components/DraggableComponent";
 import { ReactNode } from "react";
 import Input from "../componentList/Input";
 import { useGlobalEventEmitter } from "../provider/GlobalEventProvider/GlobalEventEmitterContext";
+import { Position } from "./useRender";
 
 type StringKeyStringValueObject = {
   [key: string]: string | { [key: string]: string };
@@ -15,7 +16,7 @@ export interface ElementStructure {
   style?: CSSStyleDeclaration | StringKeyStringValueObject;
   text?: string;
   events?: string;
-  position?: { x: number; y: number };
+  position?: Position;
   root?: boolean;
 }
 
