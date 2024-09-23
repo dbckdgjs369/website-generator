@@ -18,7 +18,8 @@ export default function Componentlayer({
   const [selectedID, setSelectedID] = useState("default");
   const location = useLocation();
 
-  const currentPageName = location.pathname.split("component/")[1] ?? "main";
+  const currentPageName = location.pathname.split("component/")[1] ?? "test";
+  console.log("::currentPageName", currentPageName);
   const { pageData, updatePageData: setPageData } =
     usePageData(currentPageName);
 
@@ -130,7 +131,7 @@ export default function Componentlayer({
   useEffect(() => {
     // 바뀐 json을 렌더해주는 부분
     if (isEmpty(pageData)) return;
-    parseElementsToHTML(pageData);
+    parseElementsToHTML(pageData, "edit");
   }, [pageData, currentPageName]);
 
   return (

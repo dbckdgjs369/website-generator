@@ -10,12 +10,14 @@ export default function DraggableComponent({
   position,
   handlePosition,
   emitter,
+  isDraggable,
   children,
 }: {
   id: string;
-  position: Position;
+  position?: Position;
   emitter?: GlobalEmitterType;
   handlePosition?: (position: Position) => void;
+  isDraggable?: boolean;
   children: React.ReactNode;
 }) {
   // 위치 보정 함수
@@ -34,7 +36,7 @@ export default function DraggableComponent({
   };
 
   return (
-    <Draggable position={position} onStop={handleStop}>
+    <Draggable position={position} onStop={handleStop} disabled={isDraggable}>
       <div id={id} className={id}>
         {children}
       </div>
