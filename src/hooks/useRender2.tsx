@@ -30,10 +30,12 @@ export default function useRender2() {
     id,
     position,
     component,
+    disabled,
   }: {
     id: string;
-    position: any;
+    position?: Position;
     component: ReactNode;
+    disabled?: boolean;
   }) => {
     // 새로운 div 요소 생성
     console.log("::here?", component);
@@ -51,6 +53,7 @@ export default function useRender2() {
     const root = createRoot(newElement);
     root.render(
       <DraggableComponent
+        isDraggable={disabled}
         position={position}
         emitter={g}
         id={id}
@@ -60,26 +63,18 @@ export default function useRender2() {
       </DraggableComponent>
     );
   };
-  const createHTMLElement = (elementData: ElementStructure) => {
+  const createHTMLElement = (
+    elementData: ElementStructure,
+    disabled: boolean
+  ) => {
     if (elementData.root) {
       createDraggableElement({
         id: elementData.id,
         position: elementData.position,
         component: COMPONENT_MAP[elementData.type as "input"],
+        disabled: disabled,
       });
-      // if (elementData.position) {
-      //   const e = document.getElementById(elementData.id);
-      //   console.log("::elementData.id", elementData.id, e);
-      //   if (e) {
-      //     console.log(
-      //       "position",
-      //       `translate(${elementData.position.x}px,${elementData.position.y}px)`
-      //     );
-      //     e.style[
-      //       "transform"
-      //     ] = `translate(${elementData.position.x}px,${elementData.position.y}px)`;
-      //   }
-      // }
+
       return;
     }
     const element = document.createElement(elementData.type);
@@ -100,7 +95,7 @@ export default function useRender2() {
     }
     if (elementData.inner) {
       elementData.inner.forEach((innerElementData) => {
-        const innerElement = createHTMLElement(innerElementData);
+        const innerElement = createHTMLElement(innerElementData, disabled);
         if (innerElement) {
           element.appendChild(innerElement);
         }
@@ -110,14 +105,17 @@ export default function useRender2() {
     return element;
   };
 
-  const parseElementsToHTML = (elements: ElementStructure[]) => {
+  const parseElementsToHTML = (
+    elements: ElementStructure[],
+    mode: "edit" | "result"
+  ) => {
     const container = document.getElementById("init");
     while (container?.firstChild) {
       container.removeChild(container.firstChild);
     }
     if (container) {
       elements.forEach((elementData) => {
-        const element = createHTMLElement(elementData);
+        const element = createHTMLElement(elementData, mode === "result");
         if (element) {
           container.appendChild(element);
         }

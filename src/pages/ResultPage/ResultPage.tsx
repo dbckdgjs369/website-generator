@@ -3,17 +3,18 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { PageAtom } from "../../hooks/atom";
-import { useRender } from "../../hooks";
+import useRender2 from "../../hooks/useRender2";
 
 export default function ResultPage() {
   const navigate = useNavigate();
-  const { parseElementsToHTML } = useRender();
-  const pageData = useAtomValue(PageAtom("main"));
+  const { parseElementsToHTML } = useRender2();
+  const pageData = useAtomValue(PageAtom("test"));
+  console.log("::pageData", pageData);
   const [isHover, setIsHover] = useState(false);
   const isFirstTime = Boolean(!pageData[0]?.inner);
 
   useEffect(() => {
-    parseElementsToHTML(pageData);
+    parseElementsToHTML(pageData, "result");
   }, []);
 
   return (
@@ -25,7 +26,7 @@ export default function ResultPage() {
       <div id="init" />
       {(isHover || isFirstTime) && (
         <button
-          onClick={() => navigate("/main")}
+          onClick={() => navigate("/test")}
           style={{
             position: "absolute",
             bottom: "30px",

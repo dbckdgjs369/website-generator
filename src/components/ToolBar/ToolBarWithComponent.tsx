@@ -1,8 +1,11 @@
+import { useNavigate } from "react-router-dom";
+
 import * as S from "./emotion";
 import { useGlobalEventEmitter } from "../../provider/GlobalEventProvider/GlobalEventEmitterContext";
 
 export default function ToolBarWithComponent() {
   const globalEmitter = useGlobalEventEmitter();
+  const navigate = useNavigate();
 
   const handleFile = (type: "save" | "load") => {
     globalEmitter.emit("file", type);
@@ -22,6 +25,7 @@ export default function ToolBarWithComponent() {
       <button onClick={(ev) => handleButton(ev)} id={"div"} key={"div"}>
         div
       </button>
+      <button onClick={() => navigate("/")}>result</button>
     </S.ToolBarWrapper>
   );
 }
