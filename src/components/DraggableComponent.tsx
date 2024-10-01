@@ -36,7 +36,12 @@ export default function DraggableComponent({
   };
 
   return (
-    <Draggable position={position} onStop={handleStop} disabled={isDraggable}>
+    <Draggable
+      position={position}
+      onStop={handleStop}
+      disabled={isDraggable}
+      onMouseDown={() => emitter?.emit("id", id)}
+    >
       <div id={id} className={id}>
         {children}
       </div>

@@ -18,13 +18,12 @@ export default function Componentlayer({
   const [selectedID, setSelectedID] = useState("default");
   const location = useLocation();
 
-  const currentPageName = location.pathname.split("component/")[1] ?? "test";
-  console.log("::currentPageName", currentPageName);
+  const currentPageName = location.pathname.split("component/")?.[1] ?? "test";
   const { pageData, updatePageData: setPageData } =
     usePageData(currentPageName);
 
   const { parseElementsToHTML } = useRender2();
-  const { getElementById } = useHandleStructure();
+  const { getElementById, removeElementById } = useHandleStructure();
   const globalEmitter = useGlobalEventEmitter();
   const getSelectedElementInfo = (id: string) => {
     if (isEmpty(pageData)) return;
@@ -95,17 +94,32 @@ export default function Componentlayer({
     }
   };
 
+  const deleteElement = () => {
+    if (isEmpty(pageData)) return;
+    if (selectedID === "default") return;
+    const newData = [...pageData];
+    const updatedArray = removeElementById([...newData], selectedID);
+    if (updatedArray) {
+      setPageData(updatedArray);
+    }
+    setSelectedID("default");
+  };
+
   useEffect(() => {
     if (isEmpty(pageData)) return;
     globalEmitter.on("add", handleAddElement);
     globalEmitter.on("position", handlePosition);
     globalEmitter.on("file", handleFile);
+    globalEmitter.on("id", setSelectedID);
+    globalEmitter.on("delete", deleteElement);
 
     getSelectedElementInfo(selectedID);
     return () => {
       globalEmitter.off("add", handleAddElement);
       globalEmitter.off("position", handlePosition);
       globalEmitter.off("file", handleFile);
+      globalEmitter.off("id", setSelectedID);
+      globalEmitter.off("delete", deleteElement);
     };
   }, [globalEmitter, selectedID, pageData, currentPageName]);
 
@@ -135,12 +149,7 @@ export default function Componentlayer({
   }, [pageData, currentPageName]);
 
   return (
-    <div
-      id="init"
-      onClick={getID}
-      style={{ height: "100vh", width: "100vw" }}
-      draggable={false}
-    >
+    <div id="init" onClick={getID} style={{ height: "100vh", width: "100vw" }}>
       {children}
     </div>
   );
