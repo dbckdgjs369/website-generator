@@ -12,6 +12,7 @@ export interface ElementStructure {
   events?: string;
   position?: Position;
   root?: boolean;
+  props?: Record<string, string>;
 }
 
 export default function useRender() {

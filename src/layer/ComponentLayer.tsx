@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { isEmpty } from "lodash";
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
@@ -30,14 +31,20 @@ export default function Componentlayer({
     const selected = getElementById(pageData, id);
     globalEmitter.emit("element_style", JSON.stringify(selected?.style));
     globalEmitter.emit("element_text", JSON.stringify(selected?.text));
+    globalEmitter.emit("props", JSON.stringify(selected?.props));
   };
 
-  const handleAddElement = (name: HTMLTag) => {
+  const handleAddElement = (elementInfo: { type: string; props: any }) => {
+    const { type, props } = elementInfo;
     // addElement(name, selectedID);
-    addElement(name, "default");
+    addElement(type as keyof HTMLElementTagNameMap, props, "default");
   };
 
-  const addElement = (addObjectTag: HTMLTag, targetObjectID: string) => {
+  const addElement = (
+    addObjectTag: HTMLTag,
+    props: any,
+    targetObjectID: string
+  ) => {
     // id를 가진 요소에 object Tag를 추가해줌
     if (isEmpty(pageData)) return;
     const updatedPageData = [...pageData];
@@ -48,6 +55,7 @@ export default function Componentlayer({
         id: generateRandomString(10),
         type: addObjectTag,
         root: true,
+        props: { ...props },
       });
     } else {
       foundObject.inner = [
@@ -56,6 +64,7 @@ export default function Componentlayer({
           type: addObjectTag,
           text: addObjectTag,
           root: true,
+          props: { ...props },
         },
       ];
     }
@@ -105,6 +114,18 @@ export default function Componentlayer({
     setSelectedID("default");
   };
 
+  const updateElement = (key: string, updatedProps: string) => {
+    if (isEmpty(pageData)) return;
+    const updatedPageData = [...pageData];
+    const foundObject = getElementById(updatedPageData, selectedID);
+
+    if (!foundObject) return;
+    if (foundObject?.props) {
+      foundObject.props[key] = updatedProps; //여기부터 key에 넣어야돼
+    }
+    setPageData(updatedPageData);
+  };
+
   useEffect(() => {
     if (isEmpty(pageData)) return;
     globalEmitter.on("add", handleAddElement);
@@ -112,6 +133,7 @@ export default function Componentlayer({
     globalEmitter.on("file", handleFile);
     globalEmitter.on("id", setSelectedID);
     globalEmitter.on("delete", deleteElement);
+    globalEmitter.on("update_props", updateElement);
 
     getSelectedElementInfo(selectedID);
     return () => {
@@ -120,6 +142,7 @@ export default function Componentlayer({
       globalEmitter.off("file", handleFile);
       globalEmitter.off("id", setSelectedID);
       globalEmitter.off("delete", deleteElement);
+      globalEmitter.off("update_props", updateElement);
     };
   }, [globalEmitter, selectedID, pageData, currentPageName]);
 
@@ -148,6 +171,7 @@ export default function Componentlayer({
     parseElementsToHTML(pageData, "edit");
   }, [pageData, currentPageName]);
 
+  console.log("::pageData", pageData);
   return (
     <div id="init" onClick={getID} style={{ height: "100vh", width: "100vw" }}>
       {children}

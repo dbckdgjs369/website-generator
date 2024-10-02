@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { createRoot } from "react-dom/client";
 import DraggableComponent from "../components/DraggableComponent";
@@ -5,6 +6,10 @@ import { ReactNode } from "react";
 import Input from "../componentList/Input";
 import { useGlobalEventEmitter } from "../provider/GlobalEventProvider/GlobalEventEmitterContext";
 import { Position } from "./useRender";
+import Header, { HeaderType } from "../componentList/Header";
+import NavigationBar, {
+  NavigationBarType,
+} from "../componentList/NavigationBar";
 
 type StringKeyStringValueObject = {
   [key: string]: string | { [key: string]: string };
@@ -18,10 +23,13 @@ export interface ElementStructure {
   events?: string;
   position?: Position;
   root?: boolean;
+  props?: Record<string, string>;
 }
 
 const COMPONENT_MAP = {
-  input: <Input name="" />,
+  input: ({ name }: { name: string }) => <Input name={name} />,
+  header: (props: HeaderType) => <Header {...props} />,
+  nav: (props: NavigationBarType) => <NavigationBar {...props} />,
 };
 
 export default function useRender2() {
@@ -38,7 +46,6 @@ export default function useRender2() {
     disabled?: boolean;
   }) => {
     // 새로운 div 요소 생성
-    console.log("::here?", component);
     const newElement = document.createElement("div");
     newElement.style["width"] = "0px";
     newElement.style["height"] = "0px";
@@ -71,14 +78,14 @@ export default function useRender2() {
       createDraggableElement({
         id: elementData.id,
         position: elementData.position,
-        component: COMPONENT_MAP[elementData.type as "input"],
+        //@ts-ignore
+        component: COMPONENT_MAP[elementData.type]({ ...elementData.props }),
         disabled: disabled,
       });
 
       return;
     }
     const element = document.createElement(elementData.type);
-    element.draggable = true;
     element.id = elementData.id;
 
     if (elementData.style) {

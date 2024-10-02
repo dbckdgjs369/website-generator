@@ -21,3 +21,7 @@ export const ButtonWrapper = styled.div`
 export const Button = styled.button`
   flex: 1;
 `;
+
+export const CurrentStatusWrapper = styled.div`
+  border-top: 1px solid red;
+`;
