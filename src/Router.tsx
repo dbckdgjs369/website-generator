@@ -1,16 +1,17 @@
-import { useRoutes } from "react-router-dom";
+import { useNavigate, useRoutes } from "react-router-dom";
 
 import Layout from "./layout/Layout";
 import EditorPage from "./pages/Mainpage/EditorPage";
-import TestPage from "./pages/Mainpage/TestPage";
+import BlogMainPage from "./pages/Mainpage/BlogMainPage";
 import ComponentPage from "./pages/ComponentPage/ComponentPage";
 import ResultPage from "./pages/ResultPage/ResultPage";
 import DNDPage from "./pages/DNDPage/DNDPage";
 import LayoutWithComponent from "./layout/LayoutWithComponent";
+import { useEffect } from "react";
 
 const PATHS = {
   main: "/main",
-  test: "/test",
+  blog: "/blog",
   component: "/component/*",
   dnd: "/dnd",
   result: "",
@@ -25,6 +26,12 @@ const withToolBarLayout2 = (element: React.ReactNode) => (
 );
 
 export default function Router() {
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    navigate(PATHS.blog);
+  }, []);
+
   return useRoutes([
     {
       path: PATHS.result,
@@ -35,8 +42,8 @@ export default function Router() {
       element: withToolBarLayout(<EditorPage />),
     },
     {
-      path: PATHS.test,
-      element: withToolBarLayout2(<TestPage />),
+      path: PATHS.blog,
+      element: withToolBarLayout2(<BlogMainPage />),
     },
     {
       path: PATHS.component,

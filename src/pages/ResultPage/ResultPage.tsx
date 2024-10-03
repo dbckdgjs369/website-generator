@@ -26,7 +26,7 @@ export default function ResultPage() {
       <div id="init" />
       {(isHover || isFirstTime) && (
         <button
-          onClick={() => navigate("/test")}
+          onClick={() => navigate("/blog")}
           style={{
             position: "absolute",
             bottom: "30px",
