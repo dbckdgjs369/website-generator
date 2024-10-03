@@ -10,7 +10,6 @@ import { NavigationBarType } from "../../componentList/NavigationBar";
 import { useEffect, useState } from "react";
 
 const PropsMap = {
-  input: { name: "" } as { name?: string },
   header: { title: "Groot's Tech Blog", color: "greenyellow" } as HeaderType,
   nav: { text: "default", href: "" } as NavigationBarType,
 };
@@ -34,7 +33,7 @@ export default function ToolBarWithComponent() {
     const componentName = ev.currentTarget.id;
     globalEmitter.emit("add", {
       type: componentName,
-      props: PropsMap[componentName as "input" | "nav" | "header"],
+      props: PropsMap[componentName as "nav" | "header"],
     });
   };
 
@@ -68,17 +67,11 @@ export default function ToolBarWithComponent() {
           <button onClick={() => handleFile("save")}>save</button>
           <button onClick={() => handleFile("load")}>load</button>
           <button onClick={() => handleElement("delete")}>delete</button>
-          <button onClick={(ev) => addElement(ev)} id={"input"} key={"input"}>
-            input
-          </button>
           <button onClick={(ev) => addElement(ev)} id={"header"} key={"header"}>
             header
           </button>
           <button onClick={(ev) => addElement(ev)} id={"nav"} key={"nav"}>
             nav
-          </button>
-          <button onClick={(ev) => addElement(ev)} id={"div"} key={"div"}>
-            div
           </button>
           <button onClick={() => navigate("/")}>result</button>
         </Column>
