@@ -1,15 +1,16 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { createRoot } from "react-dom/client";
+
 import DraggableComponent from "../components/DraggableComponent";
 import { ReactNode } from "react";
-import Input from "../componentList/Input";
 import { useGlobalEventEmitter } from "../provider/GlobalEventProvider/GlobalEventEmitterContext";
 import { Position } from "./useRender";
 import Header, { HeaderType } from "../componentList/Header";
 import NavigationBar, {
   NavigationBarType,
 } from "../componentList/NavigationBar";
+import Typo, { TypoType } from "../componentList/Typo";
 
 type StringKeyStringValueObject = {
   [key: string]: string | { [key: string]: string };
@@ -27,9 +28,9 @@ export interface ElementStructure {
 }
 
 const COMPONENT_MAP = {
-  input: ({ name }: { name: string }) => <Input name={name} />,
   header: (props: HeaderType) => <Header {...props} />,
   nav: (props: NavigationBarType) => <NavigationBar {...props} />,
+  typo: (props: TypoType) => <Typo {...props} />,
 };
 
 export default function useRender2() {

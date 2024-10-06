@@ -1,24 +1,24 @@
-/* eslint-disable @typescript-eslint/ban-ts-comment */
-import { isEmpty } from "lodash";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { Column } from "groot-component-library";
 
 import * as S from "./emotion";
 import { useGlobalEventEmitter } from "../../provider/GlobalEventProvider/GlobalEventEmitterContext";
-import { Column } from "groot-component-library";
 import { HeaderType } from "../../componentList/Header";
 import { NavigationBarType } from "../../componentList/NavigationBar";
-import { useEffect, useState } from "react";
+import { TypoType } from "../../componentList/Typo";
 
 const PropsMap = {
   header: { title: "Groot's Tech Blog", color: "greenyellow" } as HeaderType,
   nav: { text: "default", href: "" } as NavigationBarType,
+  typo: { text: "typo", color: "", typoSize: "span" } as TypoType,
 };
 
 export default function ToolBarWithComponent() {
   const globalEmitter = useGlobalEventEmitter();
   const navigate = useNavigate();
 
-  const [inputValues, setInputValues] = useState<Record<string, string>>({});
+  const [props, setProps] = useState<Record<string, string>>({});
 
   const handleFile = (type: "save" | "load") => {
     globalEmitter.emit("file", type);
@@ -33,30 +33,30 @@ export default function ToolBarWithComponent() {
     const componentName = ev.currentTarget.id;
     globalEmitter.emit("add", {
       type: componentName,
-      props: PropsMap[componentName as "nav" | "header"],
+      props: PropsMap[componentName as "nav" | "header" | "typo"],
     });
   };
 
-  // const [selectedID, setSelectedID] = useState("default");
-  const [props, setProps] = useState({});
   useEffect(() => {
-    // globalEmitter.on("id", setSelectedID);
-    globalEmitter.on("props", setProps);
+    globalEmitter.on("props", (props: string) => {
+      props && setProps(JSON.parse(props));
+    });
     return () => {
-      // globalEmitter.off("id", setSelectedID);
-      globalEmitter.off("props", setProps);
+      globalEmitter.off("props", (props: string) => {
+        props && setProps(JSON.parse(props));
+      });
     };
-  }, []);
+  }, [props]);
 
   const handleInputChange = (key: string, value: string) => {
-    setInputValues((prev) => ({
+    setProps((prev) => ({
       ...prev,
       [key]: value,
     }));
   };
 
   const sendProps = (key: string, defaultValue: string) => {
-    const value = inputValues[key];
+    const value = props[key];
     globalEmitter.emit("update_props", key, value ?? defaultValue);
   };
 
@@ -70,34 +70,30 @@ export default function ToolBarWithComponent() {
           <button onClick={(ev) => addElement(ev)} id={"header"} key={"header"}>
             header
           </button>
+          <button onClick={(ev) => addElement(ev)} id={"typo"} key={"typo"}>
+            typography
+          </button>
           <button onClick={(ev) => addElement(ev)} id={"nav"} key={"nav"}>
             nav
           </button>
           <button onClick={() => navigate("/")}>result</button>
         </Column>
         <S.CurrentStatusWrapper>
-          {!isEmpty(props) &&
-            Object.entries(props && JSON.parse(props as string))?.map(
-              ([key, value]) => (
-                <div>
-                  {key}:
-                  <input
-                    defaultValue={value as string}
-                    onChange={(e) => {
-                      handleInputChange(
-                        key,
-                        e.target.value?.length === 0
-                          ? (value as string)
-                          : e.target.value
-                      );
-                    }}
-                  />
-                  <button onClick={() => sendProps(key, value as string)}>
-                    update
-                  </button>
-                </div>
-              )
-            )}
+          {props &&
+            Object.entries(props)?.map(([key, value]) => (
+              <div>
+                {key}:
+                <input
+                  value={props[key]}
+                  onChange={(e) => {
+                    handleInputChange(key, e.target.value);
+                  }}
+                />
+                <button onClick={() => sendProps(key, value as string)}>
+                  update
+                </button>
+              </div>
+            ))}
         </S.CurrentStatusWrapper>
       </Column>
     </S.ToolBarWrapper>

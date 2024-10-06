@@ -12,8 +12,13 @@ export default function NavigationBar({
   href,
 }: NavigationBarType) {
   return (
-    //@ts-ignore
-    <StyledLink tag="a" typoSize="h4" href={href}>
+    <StyledLink
+      tag="a"
+      typoSize="h4"
+      //@ts-ignore
+      href={href}
+      style={{ whiteSpace: "nowrap" }}
+    >
       {text}
     </StyledLink>
   );
