@@ -5,6 +5,11 @@ export const ToolBarWrapper = styled.div`
   width: 100%;
   gap: 10px;
   flex-direction: column;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  height: 100%;
+  padding: 16px;
+  box-sizing: border-box;
 `;
 
 export const CurrentWrapper = styled.div`
@@ -23,5 +28,5 @@ export const Button = styled.button`
 `;
 
 export const CurrentStatusWrapper = styled.div`
-  border-top: 1px solid red;
+  border-top: 1px solid black;
 `;

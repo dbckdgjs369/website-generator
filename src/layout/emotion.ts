@@ -11,6 +11,5 @@ export const MainView = styled.div`
 `;
 
 export const ToolBaWrapper = styled.div`
-  width: 15%;
-  border: 1px solid black;
+  width: 20%;
 `;

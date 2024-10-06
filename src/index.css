@@ -124,6 +124,6 @@ table {
 }
 
 .selected {
-  border: 2px dotted red !important;
-  outline: none;
+  border: 2px solid #3498db;
+  box-shadow: 0 0 10px rgba(52, 152, 219, 0.7);
 }
