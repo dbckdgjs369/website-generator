@@ -10,11 +10,11 @@ import LayoutWithComponent from "./layout/LayoutWithComponent";
 import { useEffect } from "react";
 
 const PATHS = {
+  create: "/create",
   main: "/main",
-  blog: "/blog",
   component: "/component/*",
   dnd: "/dnd",
-  result: "",
+  result: "/result",
 };
 
 const withToolBarLayout = (element: React.ReactNode) => (
@@ -29,8 +29,11 @@ export default function Router() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    navigate(PATHS.blog);
-  }, []);
+    const currentPath = window.location.pathname;
+    if (currentPath === "/") {
+      navigate(PATHS.create);
+    }
+  }, [navigate]);
 
   return useRoutes([
     {
@@ -42,7 +45,7 @@ export default function Router() {
       element: withToolBarLayout(<EditorPage />),
     },
     {
-      path: PATHS.blog,
+      path: PATHS.create,
       element: withToolBarLayout2(<BlogMainPage />),
     },
     {

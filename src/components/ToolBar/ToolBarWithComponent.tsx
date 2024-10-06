@@ -76,7 +76,7 @@ export default function ToolBarWithComponent() {
           <button onClick={(ev) => addElement(ev)} id={"nav"} key={"nav"}>
             nav
           </button>
-          <button onClick={() => navigate("/")}>result</button>
+          <button onClick={() => navigate("/result")}>result</button>
         </Column>
         <S.CurrentStatusWrapper>
           {props &&

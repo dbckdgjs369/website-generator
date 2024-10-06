@@ -90,6 +90,7 @@ export default function Componentlayer({
     switch (name) {
       case "save": {
         localStorage.setItem("pageJson", JSON.stringify(pageData));
+        alert("저장에 성공했습니다!");
         break;
       }
       case "load": {
@@ -98,6 +99,7 @@ export default function Componentlayer({
           const loadedData = JSON.parse(loadData);
           setPageData(loadedData);
         }
+        alert("페이지를 불러왔습니다.");
         break;
       }
     }
@@ -146,8 +148,8 @@ export default function Componentlayer({
     };
   }, [globalEmitter, selectedID, pageData, currentPageName]);
 
-  const getID = (ev: React.MouseEvent<HTMLDivElement>) => {
-    if (ev.target instanceof Element) {
+  const getID = (ev?: React.MouseEvent<HTMLDivElement>) => {
+    if (ev?.target instanceof Element) {
       const id = ev.target.id;
       if (id === "init") {
         setSelectedID("default");
