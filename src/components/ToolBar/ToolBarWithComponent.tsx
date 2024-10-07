@@ -62,7 +62,7 @@ export default function ToolBarWithComponent() {
 
   return (
     <S.ToolBarWrapper>
-      <Column>
+      <Column style={{ gap: "20px" }}>
         <Column tag="div" style={{ gap: "10px" }}>
           <button onClick={() => handleFile("save")}>save</button>
           <button onClick={() => handleFile("load")}>load</button>
@@ -81,7 +81,7 @@ export default function ToolBarWithComponent() {
         <S.CurrentStatusWrapper>
           {props &&
             Object.entries(props)?.map(([key, value]) => (
-              <div>
+              <Column style={{ gap: "8px" }}>
                 {key}:
                 <input
                   value={props[key]}
@@ -92,7 +92,7 @@ export default function ToolBarWithComponent() {
                 <button onClick={() => sendProps(key, value as string)}>
                   update
                 </button>
-              </div>
+              </Column>
             ))}
         </S.CurrentStatusWrapper>
       </Column>
