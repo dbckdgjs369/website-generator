@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { isEmpty } from "lodash";
-import { useAtomValue } from "jotai";
-import { useEffect, useState } from "react";
+import { useAtom } from "jotai";
+import { useEffect } from "react";
 import { useLocation } from "react-router-dom";
 
 import { useHandleStructure } from "../hooks";
@@ -19,8 +19,7 @@ export default function Componentlayer({
 }: {
   children: React.ReactNode;
 }) {
-  const [selectedID, setSelectedID] = useState("default");
-  const selectedComponentID = useAtomValue(SelectedIDAtom);
+  const [selectedComponentID, setSelectedComponentID] = useAtom(SelectedIDAtom);
   const location = useLocation();
 
   const currentPageName = location.pathname.split("component/")?.[1] ?? "test";
@@ -110,23 +109,23 @@ export default function Componentlayer({
 
   const deleteElement = () => {
     if (isEmpty(pageData)) return;
-    if (selectedID === "default") return;
+    if (selectedComponentID === "default") return;
     const newData = [...pageData];
-    const updatedArray = removeElementById([...newData], selectedID);
+    const updatedArray = removeElementById([...newData], selectedComponentID);
     if (updatedArray) {
       setPageData(updatedArray);
     }
-    setSelectedID("default");
+    setSelectedComponentID("");
   };
 
   const updateElement = (key: string, updatedProps: string) => {
     if (isEmpty(pageData)) return;
     const updatedPageData = [...pageData];
-    const foundObject = getElementById(updatedPageData, selectedID);
+    const foundObject = getElementById(updatedPageData, selectedComponentID);
 
     if (!foundObject) return;
     if (foundObject?.props) {
-      foundObject.props[key] = updatedProps; //여기부터 key에 넣어야돼
+      foundObject.props[key] = updatedProps;
     }
     setPageData(updatedPageData);
   };
@@ -136,7 +135,6 @@ export default function Componentlayer({
     globalEmitter.on("add", handleAddElement);
     globalEmitter.on("position", handlePosition);
     globalEmitter.on("file", handleFile);
-    globalEmitter.on("id", setSelectedID);
     globalEmitter.on("delete", deleteElement);
     globalEmitter.on("update_props", updateElement);
 
@@ -144,44 +142,32 @@ export default function Componentlayer({
       globalEmitter.off("add", handleAddElement);
       globalEmitter.off("position", handlePosition);
       globalEmitter.off("file", handleFile);
-      globalEmitter.off("id", setSelectedID);
       globalEmitter.off("delete", deleteElement);
       globalEmitter.off("update_props", updateElement);
     };
-  }, [globalEmitter, selectedID, pageData, currentPageName]);
+  }, [globalEmitter, pageData, currentPageName, selectedComponentID]);
 
   useEffect(() => {
     getSelectedElementInfo(selectedComponentID);
   }, [selectedComponentID]);
 
-  const getID = (ev?: React.MouseEvent<HTMLDivElement>) => {
-    if (ev?.target instanceof Element) {
-      const id = ev.target.id;
-      if (id === "init") {
-        setSelectedID("default");
-      } else {
-        setSelectedID(id);
-      }
-      const prevElement = document.getElementById(
-        selectedID === "default" ? "init" : selectedID
-      );
-      const selectedElement = document.getElementById(id);
-      if (!prevElement) return;
-      if (!selectedElement) return;
-      prevElement?.removeAttribute("class");
-      selectedElement?.setAttribute("class", "selected");
-    }
+  const getID = () => {
+    setSelectedComponentID("");
   };
 
   useEffect(() => {
     // 바뀐 json을 렌더해주는 부분
     if (isEmpty(pageData)) return;
     parseElementsToHTML(pageData, "edit");
-  }, [pageData, currentPageName]);
+  }, [pageData, currentPageName, selectedComponentID]);
 
   console.log("::pageData", pageData);
   return (
-    <div id="init" onClick={getID} style={{ height: "100vh", width: "100vw" }}>
+    <div
+      id="init"
+      onClick={() => getID()}
+      style={{ height: "100vh", width: "100vw" }}
+    >
       {children}
     </div>
   );
