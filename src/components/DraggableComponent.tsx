@@ -1,7 +1,9 @@
+import { useSetAtom } from "jotai";
 import Draggable, { DraggableData, DraggableEvent } from "react-draggable";
 
 import { GlobalEmitterType } from "../provider/GlobalEventProvider/GlobalEventEmitterContext";
 import { Position } from "../hooks/useRender";
+import { SelectedIDAtom } from "../hooks/atom";
 
 const gridSize = 50; // 그리드 크기
 
@@ -20,6 +22,7 @@ export default function DraggableComponent({
   isDraggable?: boolean;
   children: React.ReactNode;
 }) {
+  const setSelectedID = useSetAtom(SelectedIDAtom);
   // 위치 보정 함수
   const snapToGrid = (pos: Position) => {
     const newX = Math.round(pos.x / gridSize) * gridSize;
@@ -42,7 +45,7 @@ export default function DraggableComponent({
       disabled={isDraggable}
       onMouseDown={(ev) => {
         ev.preventDefault();
-        emitter?.emit("id", id);
+        setSelectedID(id);
       }}
     >
       <div id={id} className={id}>

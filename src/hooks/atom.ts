@@ -3,6 +3,8 @@ import { atomFamily } from "jotai/utils";
 
 import { ElementStructure } from "./useRender";
 
+export const SelectedIDAtom = atom("");
+
 const DEFAULT_PAGE: ElementStructure = {
   id: "default",
   type: "div",
