@@ -25,7 +25,10 @@ export default function Typo({
   color = "black",
 }: TypoType) {
   return (
-    <Typography typoSize={typoSize} style={{ color: color }}>
+    <Typography
+      typoSize={typoSize}
+      style={{ color: color, whiteSpace: "nowrap" }}
+    >
       {text}
     </Typography>
   );

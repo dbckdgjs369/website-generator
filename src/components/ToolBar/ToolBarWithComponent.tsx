@@ -4,12 +4,10 @@ import { Column } from "groot-component-library";
 
 import * as S from "./emotion";
 import { useGlobalEventEmitter } from "../../provider/GlobalEventProvider/GlobalEventEmitterContext";
-import { HeaderType } from "../../componentList/Header";
 import { NavigationBarType } from "../../componentList/NavigationBar";
 import { TypoType } from "../../componentList/Typo";
 
 const PropsMap = {
-  header: { title: "Groot's Tech Blog", color: "greenyellow" } as HeaderType,
   nav: { text: "default", href: "" } as NavigationBarType,
   typo: { text: "typo", color: "", typoSize: "span" } as TypoType,
 };
@@ -33,12 +31,13 @@ export default function ToolBarWithComponent() {
     const componentName = ev.currentTarget.id;
     globalEmitter.emit("add", {
       type: componentName,
-      props: PropsMap[componentName as "nav" | "header" | "typo"],
+      props: PropsMap[componentName as "nav" | "typo"],
     });
   };
 
   useEffect(() => {
     globalEmitter.on("props", (props: string) => {
+      console.log("props", props);
       props && setProps(JSON.parse(props));
     });
     return () => {
@@ -46,7 +45,7 @@ export default function ToolBarWithComponent() {
         props && setProps(JSON.parse(props));
       });
     };
-  }, [props]);
+  }, []);
 
   const handleInputChange = (key: string, value: string) => {
     setProps((prev) => ({
@@ -67,9 +66,6 @@ export default function ToolBarWithComponent() {
           <button onClick={() => handleFile("save")}>save</button>
           <button onClick={() => handleFile("load")}>load</button>
           <button onClick={() => handleElement("delete")}>delete</button>
-          <button onClick={(ev) => addElement(ev)} id={"header"} key={"header"}>
-            header
-          </button>
           <button onClick={(ev) => addElement(ev)} id={"typo"} key={"typo"}>
             typography
           </button>
