@@ -1,5 +1,7 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { isEmpty } from "lodash";
+import { useAtomValue } from "jotai";
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 
@@ -10,6 +12,7 @@ import { HTMLTag } from "../types";
 import { generateRandomString } from "../utils/utils";
 import useRender2 from "../hooks/useRender2";
 import { Position } from "../hooks/useRender";
+import { SelectedIDAtom } from "../hooks/atom";
 
 export default function Componentlayer({
   children,
@@ -17,6 +20,7 @@ export default function Componentlayer({
   children: React.ReactNode;
 }) {
   const [selectedID, setSelectedID] = useState("default");
+  const selectedComponentID = useAtomValue(SelectedIDAtom);
   const location = useLocation();
 
   const currentPageName = location.pathname.split("component/")?.[1] ?? "test";
@@ -26,11 +30,10 @@ export default function Componentlayer({
   const { parseElementsToHTML } = useRender2();
   const { getElementById, removeElementById } = useHandleStructure();
   const globalEmitter = useGlobalEventEmitter();
+
   const getSelectedElementInfo = (id: string) => {
     if (isEmpty(pageData)) return;
     const selected = getElementById(pageData, id);
-    globalEmitter.emit("element_style", JSON.stringify(selected?.style));
-    globalEmitter.emit("element_text", JSON.stringify(selected?.text));
     globalEmitter.emit("props", JSON.stringify(selected?.props));
   };
 
@@ -137,7 +140,6 @@ export default function Componentlayer({
     globalEmitter.on("delete", deleteElement);
     globalEmitter.on("update_props", updateElement);
 
-    getSelectedElementInfo(selectedID);
     return () => {
       globalEmitter.off("add", handleAddElement);
       globalEmitter.off("position", handlePosition);
@@ -147,6 +149,10 @@ export default function Componentlayer({
       globalEmitter.off("update_props", updateElement);
     };
   }, [globalEmitter, selectedID, pageData, currentPageName]);
+
+  useEffect(() => {
+    getSelectedElementInfo(selectedComponentID);
+  }, [selectedComponentID]);
 
   const getID = (ev?: React.MouseEvent<HTMLDivElement>) => {
     if (ev?.target instanceof Element) {

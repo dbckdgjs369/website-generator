@@ -1,16 +1,18 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { css } from "@emotion/react";
+import { useAtomValue } from "jotai";
 import { createRoot } from "react-dom/client";
 
 import DraggableComponent from "../components/DraggableComponent";
 import { ReactNode } from "react";
 import { useGlobalEventEmitter } from "../provider/GlobalEventProvider/GlobalEventEmitterContext";
 import { Position } from "./useRender";
-import Header, { HeaderType } from "../componentList/Header";
 import NavigationBar, {
   NavigationBarType,
 } from "../componentList/NavigationBar";
 import Typo, { TypoType } from "../componentList/Typo";
+import { SelectedIDAtom } from "./atom";
 
 type StringKeyStringValueObject = {
   [key: string]: string | { [key: string]: string };
@@ -28,13 +30,13 @@ export interface ElementStructure {
 }
 
 const COMPONENT_MAP = {
-  header: (props: HeaderType) => <Header {...props} />,
   nav: (props: NavigationBarType) => <NavigationBar {...props} />,
   typo: (props: TypoType) => <Typo {...props} />,
 };
 
 export default function useRender2() {
   const g = useGlobalEventEmitter();
+  const selectedID = useAtomValue(SelectedIDAtom);
   const createDraggableElement = ({
     id,
     position,
@@ -67,7 +69,7 @@ export default function useRender2() {
         id={id}
         handlePosition={(pos) => console.log("pos", pos)}
       >
-        {component}
+        <div css={id === selectedID && selectedCss}>{component}</div>
       </DraggableComponent>
     );
   };
@@ -133,3 +135,9 @@ export default function useRender2() {
 
   return { parseElementsToHTML };
 }
+
+const selectedCss = css`
+  display: inline-block;
+  border: 2px solid #3498db;
+  box-shadow: 0 0 3px rgba(52, 152, 219, 0.7);
+`;
