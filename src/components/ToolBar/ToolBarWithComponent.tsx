@@ -1,6 +1,7 @@
+import styled from "@emotion/styled";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Column } from "groot-component-library";
+import { Button, Column, Row } from "groot-component-library";
 
 import * as S from "./emotion";
 import { useGlobalEventEmitter } from "../../provider/GlobalEventProvider/GlobalEventEmitterContext";
@@ -63,16 +64,28 @@ export default function ToolBarWithComponent() {
     <S.ToolBarWrapper>
       <Column style={{ gap: "20px" }}>
         <Column tag="div" style={{ gap: "10px" }}>
-          <button onClick={() => handleFile("save")}>save</button>
-          <button onClick={() => handleFile("load")}>load</button>
-          <button onClick={() => handleElement("delete")}>delete</button>
-          <button onClick={(ev) => addElement(ev)} id={"typo"} key={"typo"}>
+          <StyledButton
+            backgroundColor="#6c757d"
+            onClick={(ev) => addElement(ev)}
+            id={"typo"}
+            key={"typo"}
+          >
             typography
-          </button>
-          <button onClick={(ev) => addElement(ev)} id={"nav"} key={"nav"}>
+          </StyledButton>
+          <StyledButton
+            backgroundColor="#6c757d"
+            onClick={(ev) => addElement(ev)}
+            id={"nav"}
+            key={"nav"}
+          >
             nav
-          </button>
-          <button onClick={() => navigate("/result")}>result</button>
+          </StyledButton>
+          <StyledButton
+            backgroundColor="#ffc107"
+            onClick={() => navigate("/result")}
+          >
+            result
+          </StyledButton>
         </Column>
         <S.CurrentStatusWrapper>
           {props &&
@@ -85,13 +98,41 @@ export default function ToolBarWithComponent() {
                     handleInputChange(key, e.target.value);
                   }}
                 />
-                <button onClick={() => sendProps(key, value as string)}>
+                <StyledButton
+                  backgroundColor="#17a2b8"
+                  onClick={() => sendProps(key, value as string)}
+                >
                   update
-                </button>
+                </StyledButton>
               </Column>
             ))}
         </S.CurrentStatusWrapper>
       </Column>
+      <Row style={{ width: "100%", gap: "16px" }}>
+        <StyledButton
+          color={"white"}
+          backgroundColor={"#007bff"}
+          onClick={() => handleFile("save")}
+        >
+          save
+        </StyledButton>
+        <StyledButton
+          backgroundColor={"#28a745"}
+          onClick={() => handleFile("load")}
+        >
+          load
+        </StyledButton>
+      </Row>
+      <StyledButton
+        backgroundColor={"#dc3545"}
+        onClick={() => handleElement("delete")}
+      >
+        delete
+      </StyledButton>
     </S.ToolBarWrapper>
   );
 }
+
+const StyledButton = styled(Button)`
+  width: 100%;
+`;
