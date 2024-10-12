@@ -1,7 +1,7 @@
 import { createRoot } from "react-dom/client";
+import { Column, Row } from "groot-component-library";
 
 import DraggableComponent from "../../components/DraggableComponent";
-import { Column, Row } from "../../components/Flex";
 
 export default function DNDPage() {
   const createDraggableElement = () => {
