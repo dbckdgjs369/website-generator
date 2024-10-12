@@ -6,11 +6,11 @@ export const ToolBarWrapper = styled.div`
   width: 100%;
   gap: 10px;
   flex-direction: column;
-  border-radius: 8px;
   border: 1px solid #ddd;
   height: 100%;
   padding: 16px;
   box-sizing: border-box;
+  border-top: none;
 `;
 
 export const CurrentWrapper = styled.div`

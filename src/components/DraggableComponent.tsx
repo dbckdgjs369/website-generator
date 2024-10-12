@@ -40,6 +40,12 @@ export default function DraggableComponent({
 
   return (
     <Draggable
+      bounds={{
+        top: 0,
+        right: window.innerWidth - 600,
+        bottom: window.innerHeight,
+        left: 0,
+      }}
       position={position}
       onStop={handleStop}
       disabled={isDraggable}

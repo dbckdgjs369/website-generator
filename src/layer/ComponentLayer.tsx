@@ -166,7 +166,7 @@ export default function Componentlayer({
     <div
       id="init"
       onClick={() => getID()}
-      style={{ height: "100vh", width: "100vw" }}
+      style={{ height: "calc( 100vh - 50px )", width: "calc(100vw - 200px)" }}
     >
       {children}
     </div>
