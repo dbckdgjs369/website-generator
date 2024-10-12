@@ -1,12 +1,13 @@
 import styled from "@emotion/styled";
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { Button, Column, Row } from "groot-component-library";
+import { Button, Column } from "groot-component-library";
 
 import * as S from "./emotion";
 import { useGlobalEventEmitter } from "../../provider/GlobalEventProvider/GlobalEventEmitterContext";
 import { NavigationBarType } from "../../componentList/NavigationBar";
 import { TypoType } from "../../componentList/Typo";
+import { useAtomValue } from "jotai";
+import { SelectedIDAtom } from "../../hooks/atom";
 
 const PropsMap = {
   nav: { text: "default", href: "" } as NavigationBarType,
@@ -15,13 +16,10 @@ const PropsMap = {
 
 export default function ToolBarWithComponent() {
   const globalEmitter = useGlobalEventEmitter();
-  const navigate = useNavigate();
+  const selectedID = useAtomValue(SelectedIDAtom);
+  console.log(";:selectedID", selectedID);
 
   const [props, setProps] = useState<Record<string, string>>({});
-
-  const handleFile = (type: "save" | "load") => {
-    globalEmitter.emit("file", type);
-  };
 
   const handleElement = (type: "delete") => {
     globalEmitter.emit(type);
@@ -80,12 +78,6 @@ export default function ToolBarWithComponent() {
           >
             nav
           </StyledButton>
-          <StyledButton
-            backgroundColor="#ffc107"
-            onClick={() => navigate("/result")}
-          >
-            result
-          </StyledButton>
         </Column>
         <S.CurrentStatusWrapper>
           {props &&
@@ -108,24 +100,11 @@ export default function ToolBarWithComponent() {
             ))}
         </S.CurrentStatusWrapper>
       </Column>
-      <Row style={{ width: "100%", gap: "16px" }}>
-        <StyledButton
-          color={"white"}
-          backgroundColor={"#007bff"}
-          onClick={() => handleFile("save")}
-        >
-          save
-        </StyledButton>
-        <StyledButton
-          backgroundColor={"#28a745"}
-          onClick={() => handleFile("load")}
-        >
-          load
-        </StyledButton>
-      </Row>
+
       <StyledButton
         backgroundColor={"#dc3545"}
         onClick={() => handleElement("delete")}
+        disabled={selectedID.length === 0}
       >
         delete
       </StyledButton>
