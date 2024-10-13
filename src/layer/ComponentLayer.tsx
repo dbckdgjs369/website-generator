@@ -1,8 +1,6 @@
-/* eslint-disable @typescript-eslint/ban-ts-comment */
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { isEmpty } from "lodash";
 import { useAtom } from "jotai";
-import { useEffect } from "react";
+import { AllHTMLAttributes, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 
 import { useHandleStructure } from "../hooks";
@@ -22,7 +20,7 @@ export default function Componentlayer({
   const [selectedComponentID, setSelectedComponentID] = useAtom(SelectedIDAtom);
   const location = useLocation();
 
-  const currentPageName = location.pathname.split("component/")?.[1] ?? "test";
+  const currentPageName = location.pathname.split("create/")?.[1] ?? "";
   const { pageData, updatePageData: setPageData } =
     usePageData(currentPageName);
 
@@ -36,7 +34,10 @@ export default function Componentlayer({
     globalEmitter.emit("props", JSON.stringify(selected?.props));
   };
 
-  const handleAddElement = (elementInfo: { type: string; props: any }) => {
+  const handleAddElement = (elementInfo: {
+    type: string;
+    props: AllHTMLAttributes<keyof HTMLElementTagNameMap>;
+  }) => {
     const { type, props } = elementInfo;
     // addElement(name, selectedID);
     addElement(type as keyof HTMLElementTagNameMap, props, "default");
@@ -44,7 +45,7 @@ export default function Componentlayer({
 
   const addElement = (
     addObjectTag: HTMLTag,
-    props: any,
+    props: object,
     targetObjectID: string
   ) => {
     // id를 가진 요소에 object Tag를 추가해줌

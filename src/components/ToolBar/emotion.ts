@@ -1,5 +1,4 @@
 import styled from "@emotion/styled";
-import { Column } from "groot-component-library";
 
 export const ToolBarWrapper = styled.div`
   display: flex;
@@ -26,8 +25,4 @@ export const ButtonWrapper = styled.div`
 
 export const Button = styled.button`
   flex: 1;
-`;
-
-export const CurrentStatusWrapper = styled(Column)`
-  gap: 20px;
 `;

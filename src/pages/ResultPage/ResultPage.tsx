@@ -1,15 +1,15 @@
 import { useAtomValue } from "jotai";
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 import { PageAtom } from "../../hooks/atom";
 import useRender2 from "../../hooks/useRender2";
 
 export default function ResultPage() {
+  const { id } = useParams();
   const navigate = useNavigate();
   const { parseElementsToHTML } = useRender2();
-  const pageData = useAtomValue(PageAtom("test"));
-  console.log("::pageData", pageData);
+  const pageData = useAtomValue(PageAtom(id ?? ""));
   const [isHover, setIsHover] = useState(false);
   const isFirstTime = Boolean(!pageData[0]?.inner);
 
@@ -26,7 +26,7 @@ export default function ResultPage() {
       <div id="init" />
       {(isHover || isFirstTime) && (
         <button
-          onClick={() => navigate("/create")}
+          onClick={() => navigate(`/create/${id}`)}
           style={{
             position: "absolute",
             bottom: "30px",

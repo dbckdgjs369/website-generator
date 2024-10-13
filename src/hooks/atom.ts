@@ -15,11 +15,11 @@ const DEFAULT_PAGE: ElementStructure = {
 };
 
 export const PageList = atom<Record<string, ElementStructure[]>>({
-  main: [{ ...DEFAULT_PAGE }],
+  // main: [{ ...DEFAULT_PAGE }],
 });
 
 export const ComponentList = atom<Record<string, ElementStructure[]>>({
-  main: [{ ...DEFAULT_PAGE }],
+  // main: [{ ...DEFAULT_PAGE }],
 });
 
 const PageAtom = atomFamily((pageName: string) =>
@@ -28,6 +28,7 @@ const PageAtom = atomFamily((pageName: string) =>
       const pageData = get(PageList)[pageName] ?? [
         JSON.parse(JSON.stringify(DEFAULT_PAGE)),
       ];
+      console.log(":::getPage", get(PageList));
       return pageData;
     },
     (get, set, update: ElementStructure[]) => {
