@@ -1,8 +1,10 @@
 import { useState } from "react";
 import { Button, Column, Row } from "groot-component-library";
-import { Link } from "react-router-dom";
 
 import usePageData from "../../hooks/usePageData";
+import pageIcon from "../../assets/page.svg";
+import homeIcon from "../../assets/home.svg";
+import * as S from "./emotion";
 
 export default function PageTab() {
   // const [isOpen, setIsOpen] = useState(false);
@@ -10,18 +12,33 @@ export default function PageTab() {
   const [pageName, setPageName] = useState("");
   console.log("::pageList", pageList);
   return (
-    <Column style={{ position: "relative", height: "calc(100vh - 150px)" }}>
-      <Column>
+    <Column
+      style={{
+        padding: "0 32px",
+        position: "relative",
+        height: "calc(100vh - 150px)",
+        justifyContent: "space-between",
+      }}
+    >
+      <Column style={{ gap: "16px" }}>
         {Object.keys(pageList)?.map((page) => (
-          <Link to={`/create/${page}`}>{page}</Link>
+          <Row style={{ gap: "10px", alignItems: "center" }}>
+            {page === "main" ? <img src={homeIcon} /> : <img src={pageIcon} />}
+            <S.StyledLink to={`/create/${page}`}>{page}</S.StyledLink>
+          </Row>
         ))}
       </Column>
       <Row style={{ gap: "10px" }}>
-        <input onChange={(ev) => setPageName(ev.target.value)} />
+        <input
+          value={pageName}
+          onChange={(ev) => setPageName(ev.target.value)}
+        />
         <Button
-          backgroundColor="#ccc"
-          onClick={() => addNewPageData(pageName)}
-          // onClick={() => navigate(`/create/${pageName}`)}
+          backgroundColor="gray"
+          onClick={() => {
+            addNewPageData(pageName);
+            setPageName("");
+          }}
           style={{ height: "30px" }}
         >
           add page
