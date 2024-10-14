@@ -5,7 +5,7 @@ import { ElementStructure } from "./useRender";
 
 export const SelectedIDAtom = atom("");
 
-const DEFAULT_PAGE: ElementStructure = {
+export const DEFAULT_PAGE: ElementStructure = {
   id: "default",
   type: "div",
   style: {
@@ -15,7 +15,7 @@ const DEFAULT_PAGE: ElementStructure = {
 };
 
 export const PageList = atom<Record<string, ElementStructure[]>>({
-  // main: [{ ...DEFAULT_PAGE }],
+  main: [{ ...DEFAULT_PAGE }],
 });
 
 export const ComponentList = atom<Record<string, ElementStructure[]>>({
