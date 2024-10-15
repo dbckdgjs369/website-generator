@@ -7,7 +7,7 @@ export const ToolBarWrapper = styled.div`
   flex-direction: column;
   border: 1px solid #ddd;
   height: 100%;
-  padding: 16px;
+  padding: 16px 32px;
   box-sizing: border-box;
   border-top: none;
 `;

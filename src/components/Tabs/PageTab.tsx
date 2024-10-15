@@ -14,13 +14,12 @@ export default function PageTab() {
   return (
     <Column
       style={{
-        padding: "0 32px",
         position: "relative",
         height: "calc(100vh - 150px)",
         justifyContent: "space-between",
       }}
     >
-      <Column style={{ gap: "16px" }}>
+      <Column style={{ gap: "16px", padding: "8px" }}>
         {Object.keys(pageList)?.map((page) => (
           <Row style={{ gap: "10px", alignItems: "center" }}>
             {page === "main" ? <img src={homeIcon} /> : <img src={pageIcon} />}
@@ -28,7 +27,7 @@ export default function PageTab() {
           </Row>
         ))}
       </Column>
-      <Row style={{ gap: "10px" }}>
+      <Row style={{ justifyContent: "space-between" }}>
         <input
           value={pageName}
           onChange={(ev) => setPageName(ev.target.value)}
@@ -39,7 +38,7 @@ export default function PageTab() {
             addNewPageData(pageName);
             setPageName("");
           }}
-          style={{ height: "30px" }}
+          style={{ height: "30px", width: "80px" }}
         >
           add page
         </Button>
