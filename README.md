@@ -1,32 +1,29 @@
-<<<<<<< HEAD
+
 # website-generator
 easy to make website with json
-=======
-# React + TypeScript + Vite
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+--- 
+# How to use
 
-Currently, two official plugins are available:
+### 1. Click the button to add new components.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
 
-## Expanding the ESLint configuration
+<img width="500" alt="image" src="https://github.com/user-attachments/assets/abb673ff-739d-4de9-b7de-d80d7e3e2f72">
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+### 2. Drag the component and place it where you want.
 
-- Configure the top-level `parserOptions` property like this:
 
-```js
-   parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-   },
-```
+<img width="500" alt="image" src="https://github.com/user-attachments/assets/a2cec938-7d43-4b6f-8e7b-b569ba2a501f">
 
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
->>>>>>> 67aa1eb (feat: json을 html로 파싱하는 함수 구현)
+### 3. Select a component and change its properties.
+
+<img width="500" alt="image" src="https://github.com/user-attachments/assets/ae455abb-eec2-4e59-8c23-80e1fcee109e">
+
+
+### 4. You can add new pages in the Pages tab.
+<img width="500" alt="image" src="https://github.com/user-attachments/assets/ea6160d1-26d7-46c5-95a0-31c069b0d65f">
+
+### 5. Make your own website!
+
+<img width="500" alt="image" src="https://github.com/user-attachments/assets/ba12628c-86b8-4e9e-a6f0-7f659990787f">
+
