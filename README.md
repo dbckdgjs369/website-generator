@@ -2,6 +2,16 @@
 # website-generator
 easy to make website with json
 
+
+# installation
+```
+git clone https://github.com/dbckdgjs369/website-generator.git
+
+npm install
+
+npm run dev
+```
+
 --- 
 # How to use
 
