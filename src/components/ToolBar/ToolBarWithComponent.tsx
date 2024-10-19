@@ -2,7 +2,7 @@ import { Column, Tab } from "groot-component-library";
 
 import * as S from "./emotion";
 import PageTab from "../Tabs/PageTab";
-import InsertTabl from "../Tabs/InsertTab";
+import InsertTab from "../Tabs/InsertTab";
 
 export default function ToolBarWithComponent() {
   return (
@@ -15,7 +15,7 @@ export default function ToolBarWithComponent() {
             <Tab value="theme">Themes</Tab>
           </Tab.List>
           <Tab.Panel value="insert">
-            <InsertTabl />
+            <InsertTab />
           </Tab.Panel>
           <Tab.Panel value="page">
             <PageTab />

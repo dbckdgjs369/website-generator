@@ -31,7 +31,10 @@ export default function Componentlayer({
   const getSelectedElementInfo = (id: string) => {
     if (isEmpty(pageData)) return;
     const selected = getElementById(pageData, id);
-    globalEmitter.emit("props", JSON.stringify(selected?.props));
+    globalEmitter.emit(
+      "props",
+      JSON.stringify({ type: selected?.type, props: selected?.props })
+    );
   };
 
   const handleAddElement = (elementInfo: {

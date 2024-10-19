@@ -5,7 +5,7 @@ import { Column } from "groot-component-library";
 import { useGlobalEventEmitter } from "../../provider/GlobalEventProvider/GlobalEventEmitterContext";
 import { SelectedIDAtom } from "../../hooks/atom";
 import { NavigationBarType } from "../../componentList/NavigationBar";
-import { TypoType } from "../../componentList/Typo";
+import { ALL_TYPO_TYPE_LIST, TypoType } from "../../componentList/Typo";
 import * as S from "./emotion";
 
 const PROPS_MAP = {
@@ -45,7 +45,6 @@ export default function InsertTab() {
 
   useEffect(() => {
     globalEmitter.on("props", (props: string) => {
-      console.log("props", props);
       props && setProps(JSON.parse(props));
     });
     return () => {
@@ -54,7 +53,7 @@ export default function InsertTab() {
       });
     };
   }, []);
-
+  console.log("props", props);
   return (
     <Column
       tag="div"
@@ -84,16 +83,28 @@ export default function InsertTab() {
         </S.StyledButton>
       </Column>
       <S.CurrentStatusWrapper>
-        {props &&
-          Object.entries(props)?.map(([key, value]) => (
+        {props?.props &&
+          Object.entries(props?.props)?.map(([key, value]) => (
             <Column style={{ gap: "8px" }}>
               {key}:
-              <input
-                value={props[key]}
-                onChange={(e) => {
-                  handleInputChange(key, e.target.value);
-                }}
-              />
+              {key === "typoSize" ? (
+                <select
+                  onChange={(e) => {
+                    handleInputChange(key, e.target.value);
+                  }}
+                >
+                  {ALL_TYPO_TYPE_LIST.map((type) => (
+                    <option value={type}>{type}</option>
+                  ))}
+                </select>
+              ) : (
+                <input
+                  value={props[key]}
+                  onChange={(e) => {
+                    handleInputChange(key, e.target.value);
+                  }}
+                />
+              )}
               <S.StyledButton
                 backgroundColor="#17a2b8"
                 onClick={() => sendProps(key, value as string)}
