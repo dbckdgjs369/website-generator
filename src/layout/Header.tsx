@@ -1,5 +1,5 @@
 import { useNavigate, useParams } from "react-router-dom";
-import { Avatar, Button, Row } from "groot-component-library";
+import { Avatar, Button, Row, Typography } from "groot-component-library";
 
 import * as S from "./emotion";
 import Img from "../assets/groot.png";
@@ -13,9 +13,11 @@ export default function Header() {
   const handleFile = (type: "save" | "load") => {
     globalEmitter.emit("file", type);
   };
+
   return (
     <S.Header tag={"header"}>
       <Avatar src={Img} size={30} />
+      <Typography typoSize="h3">{id}</Typography>
       <Row style={{ gap: "10px" }}>
         <Button
           backgroundColor="#ffc107"
