@@ -21,7 +21,7 @@ export default function PageTab() {
     >
       <Column style={{ gap: "16px", padding: "8px" }}>
         {Object.keys(pageList)?.map((page) => (
-          <Row style={{ gap: "10px", alignItems: "center" }}>
+          <Row style={{ gap: "10px", alignItems: "center" }} key={page}>
             {page === "main" ? <img src={homeIcon} /> : <img src={pageIcon} />}
             <S.StyledLink to={`/create/${page}`}>{page}</S.StyledLink>
           </Row>

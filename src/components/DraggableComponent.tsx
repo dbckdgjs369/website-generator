@@ -1,3 +1,4 @@
+import { useRef } from "react";
 import { useSetAtom } from "jotai";
 import Draggable, { DraggableData, DraggableEvent } from "react-draggable";
 
@@ -22,6 +23,7 @@ export default function DraggableComponent({
   isDraggable?: boolean;
   children: React.ReactNode;
 }) {
+  const nodeRef = useRef(null);
   const setSelectedID = useSetAtom(SelectedIDAtom);
   // 위치 보정 함수
   const snapToGrid = (pos: Position) => {
@@ -40,6 +42,7 @@ export default function DraggableComponent({
 
   return (
     <Draggable
+      nodeRef={nodeRef}
       bounds={{
         top: 0,
         right: window.innerWidth - 600,
@@ -54,7 +57,7 @@ export default function DraggableComponent({
         setSelectedID(id);
       }}
     >
-      <div id={id} className={id}>
+      <div id={id} className={id} ref={nodeRef}>
         {children}
       </div>
     </Draggable>
