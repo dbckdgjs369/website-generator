@@ -3,12 +3,12 @@ import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
 import { PageAtom } from "../../hooks/atom";
-import useRender2 from "../../hooks/useRender2";
+import useComponentRender from "../../hooks/useComponentRender";
 
 export default function ResultPage() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { parseElementsToHTML } = useRender2();
+  const { parseElementsToHTML } = useComponentRender();
   const pageData = useAtomValue(PageAtom(id ?? ""));
   const [isHover, setIsHover] = useState(false);
   const isFirstTime = Boolean(!pageData[0]?.inner);

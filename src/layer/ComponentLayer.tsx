@@ -8,7 +8,7 @@ import usePageData from "../hooks/usePageData";
 import { useGlobalEventEmitter } from "../provider/GlobalEventProvider/GlobalEventEmitterContext";
 import { HTMLTag } from "../types";
 import { generateRandomString } from "../utils/utils";
-import useRender2 from "../hooks/useRender2";
+import useComponentRender from "../hooks/useComponentRender";
 import { Position } from "../hooks/useRender";
 import { SelectedIDAtom } from "../hooks/atom";
 
@@ -24,7 +24,7 @@ export default function Componentlayer({
   const { pageData, updatePageData: setPageData } =
     usePageData(currentPageName);
 
-  const { parseElementsToHTML } = useRender2();
+  const { parseElementsToHTML } = useComponentRender();
   const { getElementById, removeElementById } = useHandleStructure();
   const globalEmitter = useGlobalEventEmitter();
 

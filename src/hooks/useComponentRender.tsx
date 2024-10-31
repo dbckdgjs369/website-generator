@@ -34,7 +34,7 @@ const COMPONENT_MAP = {
   typo: (props: TypoType) => <Typo {...props} />,
 };
 
-export default function useRender2() {
+export default function useComponentRender() {
   const g = useGlobalEventEmitter();
   const selectedID = useAtomValue(SelectedIDAtom);
   const createDraggableElement = ({
