@@ -8,6 +8,11 @@ import { NavigationBarType } from "../../componentList/NavigationBar";
 import { ALL_TYPO_TYPE_LIST, TypoType } from "../../componentList/Typo";
 import * as S from "./emotion";
 
+type PropsType = {
+  type?: string;
+  props?: Record<string, string>;
+};
+
 const PROPS_MAP = {
   nav: { text: "default", href: "" } as NavigationBarType,
   typo: { text: "typo", color: "", typoSize: "span" } as TypoType,
@@ -16,7 +21,7 @@ const PROPS_MAP = {
 export default function InsertTab() {
   const globalEmitter = useGlobalEventEmitter();
   const selectedID = useAtomValue(SelectedIDAtom);
-  const [props, setProps] = useState<Record<string, string>>({});
+  const [props, setProps] = useState<PropsType>({});
 
   const handleElement = (type: "delete") => {
     globalEmitter.emit(type);
@@ -32,14 +37,17 @@ export default function InsertTab() {
   };
 
   const sendProps = (key: string, defaultValue: string) => {
-    const value = props[key];
+    const value = props?.props?.[key];
     globalEmitter.emit("update_props", key, value ?? defaultValue);
   };
 
   const handleInputChange = (key: string, value: string) => {
     setProps((prev) => ({
       ...prev,
-      [key]: value,
+      props: {
+        ...prev.props,
+        [key]: value,
+      },
     }));
   };
 
@@ -85,21 +93,24 @@ export default function InsertTab() {
       <S.CurrentStatusWrapper>
         {props?.props &&
           Object.entries(props?.props)?.map(([key, value]) => (
-            <Column style={{ gap: "8px" }}>
+            <Column style={{ gap: "8px" }} key={key}>
               {key}:
               {key === "typoSize" ? (
                 <select
+                  value={value}
                   onChange={(e) => {
                     handleInputChange(key, e.target.value);
                   }}
                 >
                   {ALL_TYPO_TYPE_LIST.map((type) => (
-                    <option value={type}>{type}</option>
+                    <option value={type} key={type}>
+                      {type}
+                    </option>
                   ))}
                 </select>
               ) : (
                 <input
-                  value={props[key]}
+                  value={value}
                   onChange={(e) => {
                     handleInputChange(key, e.target.value);
                   }}
