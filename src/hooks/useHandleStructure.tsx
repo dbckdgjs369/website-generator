@@ -1,15 +1,15 @@
 import { isEmpty } from "lodash";
 
-import { ElementStructure } from "./useRender";
+import { ComponentListType, ElementStructure } from "./atom";
 
 export default function useHandleStructure() {
   function getElementById(
-    elements: ElementStructure[],
+    elements: ComponentListType,
     id: string
   ): ElementStructure | undefined {
     if (isEmpty(elements)) return;
-    for (const element of elements) {
-      if (element.id === id) {
+    for (const [key, element] of elements) {
+      if (key === id) {
         return element;
       }
       if (element.inner) {
@@ -22,14 +22,14 @@ export default function useHandleStructure() {
     return undefined;
   }
 
-  function removeElementById(arr: ElementStructure[], targetId: string) {
-    for (let i = 0; i < arr.length; i++) {
-      const currentObj = arr[i];
+  function removeElementById(elements: ComponentListType, targetId: string) {
+    for (const [key, element] of elements) {
+      const currentObj = element;
 
-      if (currentObj.id === targetId) {
+      if (key === targetId) {
         // 찾은 경우 해당 객체를 배열에서 제거
-        arr.splice(i, 1);
-        return arr;
+        elements.delete(key);
+        return elements;
       }
 
       if (currentObj.inner) {
@@ -38,7 +38,7 @@ export default function useHandleStructure() {
       }
     }
 
-    return arr;
+    return elements;
   }
   return {
     getElementById,

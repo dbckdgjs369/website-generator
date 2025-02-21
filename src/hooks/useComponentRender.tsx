@@ -7,27 +7,11 @@ import { createRoot } from "react-dom/client";
 import DraggableComponent from "../components/DraggableComponent";
 import { ReactNode } from "react";
 import { useGlobalEventEmitter } from "../provider/GlobalEventProvider/GlobalEventEmitterContext";
-import { Position } from "./useRender";
 import NavigationBar, {
   NavigationBarType,
 } from "../componentList/NavigationBar";
 import Typo, { TypoType } from "../componentList/Typo";
-import { SelectedIDAtom } from "./atom";
-
-type StringKeyStringValueObject = {
-  [key: string]: string | { [key: string]: string };
-};
-export interface ElementStructure {
-  id: string;
-  type: keyof HTMLElementTagNameMap;
-  inner?: ElementStructure[];
-  style?: CSSStyleDeclaration | StringKeyStringValueObject;
-  text?: string;
-  events?: string;
-  position?: Position;
-  root?: boolean;
-  props?: Record<string, string>;
-}
+import { ElementStructure, Position, SelectedIDAtom } from "./atom";
 
 const COMPONENT_MAP = {
   nav: (props: NavigationBarType) => <NavigationBar {...props} />,
@@ -132,6 +116,45 @@ export default function useComponentRender() {
       });
     }
   };
+
+  // const parseElementsToHTML = (
+  //   newElements: ElementStructure[],
+  //   mode: "edit" | "result"
+  // ) => {
+  //   const container = document.getElementById("init");
+  //   if (!container) return;
+
+  //   const existingElements = new Map<string, HTMLElement>();
+
+  //   // 현재 컨테이너에 있는 요소들을 Map에 저장
+  //   Array.from(container.children).forEach((child) => {
+  //     const key = child.getAttribute("data-key");
+  //     if (key) {
+  //       existingElements.set(key, child as HTMLElement);
+  //     }
+  //   });
+
+  //   newElements.forEach((elementData) => {
+  //     const key = elementData.id; // id를 키값으로 사용한다고 가정
+  //     const existingElement = existingElements.get(key);
+
+  //     if (existingElement) {
+  //       // 기존 요소가 있다면 업데이트
+  //       const newElement = createHTMLElement(elementData, mode === "result");
+  //       container.replaceChild(newElement!, existingElement);
+  //       existingElements.delete(key);
+  //     } else {
+  //       // 새로운 요소라면 추가
+  //       const newElement = createHTMLElement(elementData, mode === "result");
+  //       if (newElement) {
+  //         container.appendChild(newElement);
+  //       }
+  //     }
+  //   });
+
+  //   // 기존에 있었지만 새로운 JSON에서 사라진 요소는 제거
+  //   existingElements.forEach((element) => container.removeChild(element));
+  // };
 
   return { parseElementsToHTML };
 }

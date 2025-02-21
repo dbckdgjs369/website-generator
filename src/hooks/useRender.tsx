@@ -1,19 +1,4 @@
-type StringKeyStringValueObject = {
-  [key: string]: string | { [key: string]: string };
-};
-
-export type Position = { x: number; y: number };
-export interface ElementStructure {
-  id: string;
-  type: keyof HTMLElementTagNameMap;
-  inner?: ElementStructure[];
-  style?: CSSStyleDeclaration | StringKeyStringValueObject;
-  text?: string;
-  events?: string;
-  position?: Position;
-  root?: boolean;
-  props?: Record<string, string>;
-}
+import { ComponentListType, ElementStructure } from "./atom";
 
 export default function useRender() {
   const createHTMLElement = (elementData: ElementStructure): HTMLElement => {
@@ -34,7 +19,11 @@ export default function useRender() {
       element.textContent = elementData.text;
     }
     if (elementData.inner) {
-      elementData.inner.forEach((innerElementData) => {
+      for (const [, e] of elementData.inner) {
+        const innerElement = createHTMLElement(e);
+        element.appendChild(innerElement);
+      }
+      Object.values(elementData.inner).forEach((innerElementData) => {
         const innerElement = createHTMLElement(innerElementData);
         element.appendChild(innerElement);
       });
@@ -48,7 +37,7 @@ export default function useRender() {
     return element;
   };
 
-  const parseElementsToHTML = (elements: ElementStructure[]) => {
+  const parseElementsToHTML = (elements: ComponentListType) => {
     const container = document.getElementById("init");
     while (container?.firstChild) {
       container.removeChild(container.firstChild);

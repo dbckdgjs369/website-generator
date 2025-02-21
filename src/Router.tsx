@@ -8,6 +8,7 @@ import ResultPage from "./pages/ResultPage/ResultPage";
 import DNDPage from "./pages/DNDPage/DNDPage";
 import LayoutWithComponent from "./layout/LayoutWithComponent";
 import { useEffect } from "react";
+import TestPage from "./pages/ResultPage/TestPage";
 
 const PATHS = {
   create: "/create/:id",
@@ -55,6 +56,10 @@ export default function Router() {
     {
       path: PATHS.dnd,
       element: <DNDPage />,
+    },
+    {
+      path: "test",
+      element: <TestPage />,
     },
   ]);
 }

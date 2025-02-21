@@ -45,7 +45,7 @@ export default function DraggableComponent({
       nodeRef={nodeRef}
       bounds={{
         top: 0,
-        right: window.innerWidth - 600,
+        right: window.innerWidth - 340,
         bottom: window.innerHeight,
         left: 0,
       }}

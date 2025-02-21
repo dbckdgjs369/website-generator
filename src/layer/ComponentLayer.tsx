@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { isEmpty } from "lodash";
 import { useAtom } from "jotai";
 import { AllHTMLAttributes, useEffect } from "react";
@@ -11,6 +12,7 @@ import { generateRandomString } from "../utils/utils";
 import useComponentRender from "../hooks/useComponentRender";
 import { Position } from "../hooks/useRender";
 import { SelectedIDAtom } from "../hooks/atom";
+import usePageHandler from "../hooks/usePageHandler";
 
 export default function Componentlayer({
   children,
@@ -21,8 +23,15 @@ export default function Componentlayer({
   const location = useLocation();
 
   const currentPageName = location.pathname.split("create/")?.[1] ?? "";
-  const { pageData, updatePageData: setPageData } =
-    usePageData(currentPageName);
+  const {
+    pageList: pageData,
+    addComponent,
+    addPage,
+    deleteComponent,
+    deletePage,
+    updateComponent,
+  } = usePageHandler();
+  const currentPageData = pageData.get(currentPageName);
 
   const { parseElementsToHTML } = useComponentRender();
   const { getElementById, removeElementById } = useHandleStructure();
@@ -30,7 +39,7 @@ export default function Componentlayer({
 
   const getSelectedElementInfo = (id: string) => {
     if (isEmpty(pageData)) return;
-    const selected = getElementById(pageData, id);
+    const selected = getElementById(pageData.get(currentPageName ?? "")!, id);
     globalEmitter.emit(
       "props",
       JSON.stringify({ type: selected?.type, props: selected?.props })
@@ -111,15 +120,21 @@ export default function Componentlayer({
     }
   };
 
+  // const deleteElement = () => {
+  //   if (isEmpty(pageData)) return;
+  //   if (selectedComponentID === "default") return;
+  //   const newData = [...pageData];
+  //   const updatedArray = removeElementById([...newData], selectedComponentID);
+  //   if (updatedArray) {
+  //     setPageData(updatedArray);
+  //   }
+  //   setSelectedComponentID("");
+  // };
   const deleteElement = () => {
     if (isEmpty(pageData)) return;
-    if (selectedComponentID === "default") return;
-    const newData = [...pageData];
-    const updatedArray = removeElementById([...newData], selectedComponentID);
-    if (updatedArray) {
-      setPageData(updatedArray);
-    }
-    setSelectedComponentID("");
+    if (selectedID === "default") return;
+    deleteComponent(currentPageName, selectedID);
+    setSelectedID("default");
   };
 
   const updateElement = (key: string, updatedProps: string) => {

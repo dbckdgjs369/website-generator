@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { isEmpty } from "lodash";
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
@@ -7,7 +8,7 @@ import { useHandleStructure } from "./hooks";
 import { useGlobalEventEmitter } from "./provider/GlobalEventProvider/GlobalEventEmitterContext";
 import { HTMLTag } from "./types";
 import { generateRandomString } from "./utils/utils";
-import usePageData from "./hooks/usePageData";
+import usePageHandler from "./hooks/usePageHandler";
 
 const DEFAULT_STYLE = {
   display: "flex",
@@ -23,10 +24,14 @@ export default function Provider({ children }: { children: React.ReactNode }) {
 
   const currentPageName = location.pathname.split("component/")[1] ?? "main";
   const {
-    pageData,
-    updatePageData: setPageData,
-    pageList,
-  } = usePageData(currentPageName);
+    pageList: pageData,
+    addComponent,
+    addPage,
+    deleteComponent,
+    deletePage,
+    updateComponent,
+  } = usePageHandler();
+  const currentPageData = pageData.get(currentPageName);
   console.log(":pageData", pageData);
 
   const { parseElementsToHTML } = useRender();
@@ -34,98 +39,156 @@ export default function Provider({ children }: { children: React.ReactNode }) {
   const globalEmitter = useGlobalEventEmitter();
   const getSelectedElementInfo = (id: string) => {
     if (isEmpty(pageData)) return;
-    const selected = getElementById(pageData, id);
+    const selected = getElementById(pageData.get(currentPageName ?? "")!, id);
     globalEmitter.emit("element_style", JSON.stringify(selected?.style));
     globalEmitter.emit("element_text", JSON.stringify(selected?.text));
   };
 
   const handleAddElement = (name: HTMLTag) => {
+    console.log("::::name", name);
     addElement(name, selectedID);
   };
   const handleAddComponent = (name: string) => {
-    addComponent(name, selectedID);
+    console.log("::::name", name);
+    // addElement(name, selectedID);
   };
 
+  // const addComponent = (componentName: string, targetObjectID: string) => {
+  //   if (isEmpty(pageData)) return;
+  //   const updatedPageData = [...pageData];
+  //   const foundObject = getElementById(pageData, targetObjectID);
+  //   const [component] = pageList[componentName];
+  //   if (!component.inner) return;
+  //   const [inner] = component.inner;
+  //   if (!foundObject) return;
+  //   if (foundObject.inner) {
+  //     foundObject.inner.push({ ...inner, id: generateRandomString(10) });
+  //   } else {
+  //     foundObject.inner = [{ ...inner, id: generateRandomString(10) }];
+  //   }
+  //   setPageData(updatedPageData);
+  // };
   const handleAddStyle = (styleFromToolBar: string) => {
-    if (isEmpty(pageData)) return;
-    const updatedPageData = [...pageData];
-    const foundObject = getElementById(updatedPageData, selectedID);
-    if (!foundObject) return;
-    const newStyleObject: { [key: string]: string } = {};
     const styleArr = styleFromToolBar.replace(/\r?\n|\r/g, "").split(";");
+    const newStyleObject: { [key: string]: string } = {};
     styleArr.forEach((style: string) => {
       if (style.length === 0) return;
       const row = style.split(":");
       newStyleObject[row[0]] = row[1];
     });
-
-    foundObject.style = { ...newStyleObject };
-    globalEmitter.emit("element_style", JSON.stringify({ ...newStyleObject }));
-
-    setPageData(updatedPageData);
+    updateComponent(currentPageName, selectedID, { style: newStyleObject });
   };
+  // const handleAddStyle = (styleFromToolBar: string) => {
+  //   if (isEmpty(currentPageData)) return;
+  //   // const updatedPageData = [...pageData];
+  //   const foundObject = getElementById(currentPageData!, selectedID);
+  //   if (!foundObject) return;
+  //   const newStyleObject: { [key: string]: string } = {};
+  //   const styleArr = styleFromToolBar.replace(/\r?\n|\r/g, "").split(";");
+  //   styleArr.forEach((style: string) => {
+  //     if (style.length === 0) return;
+  //     const row = style.split(":");
+  //     newStyleObject[row[0]] = row[1];
+  //   });
+
+  //   foundObject.style = { ...newStyleObject };
+  //   globalEmitter.emit("element_style", JSON.stringify({ ...newStyleObject }));
+
+  //   setPageData(currentPageData);
+  // };
+
+  // const handleAddText = (text: string) => {
+  //   if (isEmpty(pageData)) return;
+  //   const updatedPageData = [...pageData];
+  //   const foundObject = getElementById(updatedPageData, selectedID);
+  //   if (!foundObject) return;
+  //   foundObject.text = text;
+  //   setPageData(updatedPageData);
+  // };
 
   const handleAddText = (text: string) => {
     if (isEmpty(pageData)) return;
-    const updatedPageData = [...pageData];
-    const foundObject = getElementById(updatedPageData, selectedID);
-    if (!foundObject) return;
-    foundObject.text = text;
-    setPageData(updatedPageData);
+    updateComponent(currentPageName, selectedID, {
+      text: text,
+    });
   };
 
+  // const deleteElement = () => {
+  //   if (isEmpty(pageData)) return;
+  //   if (selectedID === "default") return;
+  //   const newData = [...pageData];
+  //   const updatedArray = removeElementById([...newData], selectedID);
+  //   if (updatedArray) {
+  //     (updatedArray);
+  //   }
+  //   setSelectedID("default");
+  // };
   const deleteElement = () => {
     if (isEmpty(pageData)) return;
     if (selectedID === "default") return;
-    const newData = [...pageData];
-    const updatedArray = removeElementById([...newData], selectedID);
-    if (updatedArray) {
-      setPageData(updatedArray);
-    }
+    deleteComponent(currentPageName, selectedID);
     setSelectedID("default");
   };
 
-  console.log("::pageList", pageList);
-  const addComponent = (componentName: string, targetObjectID: string) => {
-    if (isEmpty(pageData)) return;
-    const updatedPageData = [...pageData];
-    const foundObject = getElementById(pageData, targetObjectID);
-    const [component] = pageList[componentName];
-    if (!component.inner) return;
-    const [inner] = component.inner;
-    if (!foundObject) return;
-    if (foundObject.inner) {
-      foundObject.inner.push({ ...inner, id: generateRandomString(10) });
-    } else {
-      foundObject.inner = [{ ...inner, id: generateRandomString(10) }];
-    }
-    setPageData(updatedPageData);
-  };
+  // console.log("::pageList", pageList);
+  // const addComponent = (componentName: string, targetObjectID: string) => {
+  //   if (isEmpty(pageData)) return;
+  //   const updatedPageData = [...pageData];
+  //   const foundObject = getElementById(pageData, targetObjectID);
+  //   const [component] = pageList[componentName];
+  //   if (!component.inner) return;
+  //   const [inner] = component.inner;
+  //   if (!foundObject) return;
+  //   if (foundObject.inner) {
+  //     foundObject.inner.push({ ...inner, id: generateRandomString(10) });
+  //   } else {
+  //     foundObject.inner = [{ ...inner, id: generateRandomString(10) }];
+  //   }
+  //   setPageData(updatedPageData);
+  // };
 
+  // const addElement = (addObjectTag: HTMLTag, targetObjectID: string) => {
+  //   // id를 가진 요소에 object Tag를 추가해줌
+  //   if (isEmpty(pageData)) return;
+  //   const updatedPageData = [...pageData];
+  //   const foundObject = getElementById(updatedPageData, targetObjectID);
+  //   if (!foundObject) return;
+  //   if (foundObject.inner) {
+  //     foundObject.inner.push({
+  //       id: generateRandomString(10),
+  //       type: addObjectTag,
+  //       style: DEFAULT_STYLE,
+  //       text: addObjectTag,
+  //     });
+  //   } else {
+  //     foundObject.inner = [
+  //       {
+  //         id: generateRandomString(10),
+  //         type: addObjectTag,
+  //         style: DEFAULT_STYLE,
+  //         text: addObjectTag,
+  //       },
+  //     ];
+  //   }
+  //   setPageData(updatedPageData);
+  // };
   const addElement = (addObjectTag: HTMLTag, targetObjectID: string) => {
     // id를 가진 요소에 object Tag를 추가해줌
-    if (isEmpty(pageData)) return;
-    const updatedPageData = [...pageData];
-    const foundObject = getElementById(updatedPageData, targetObjectID);
-    if (!foundObject) return;
-    if (foundObject.inner) {
-      foundObject.inner.push({
-        id: generateRandomString(10),
-        type: addObjectTag,
-        style: DEFAULT_STYLE,
-        text: addObjectTag,
-      });
-    } else {
-      foundObject.inner = [
-        {
-          id: generateRandomString(10),
-          type: addObjectTag,
-          style: DEFAULT_STYLE,
-          text: addObjectTag,
-        },
-      ];
-    }
-    setPageData(updatedPageData);
+    addComponent(
+      currentPageName,
+      targetObjectID,
+      new Map([
+        [
+          generateRandomString(10),
+          {
+            id: generateRandomString(10),
+            type: addObjectTag,
+            style: DEFAULT_STYLE,
+            text: addObjectTag,
+          },
+        ],
+      ])
+    );
   };
 
   const handleFile = (name: string) => {
@@ -212,40 +275,41 @@ export default function Provider({ children }: { children: React.ReactNode }) {
       selectedElement?.setAttribute("class", "selected");
     }
   };
-  const drop = (ev: React.DragEvent<HTMLElement>) => {
-    if (isEmpty(pageData)) return;
+  console.log(":::::pageData", pageData);
+  // const drop = (ev: React.DragEvent<HTMLElement>) => {
+  //   if (isEmpty(pageData)) return;
 
-    const newData = [...pageData];
-    const x = ev.clientX;
-    const y = ev.clientY;
+  //   const newData = [...pageData];
+  //   const x = ev.clientX;
+  //   const y = ev.clientY;
 
-    const dragTarget = ev.target as HTMLElement;
-    const dropTarget = document.elementFromPoint(x, y);
-    const dragObj = getElementById(newData, dragTarget.id);
-    if (selectedID === dragTarget.id) return;
-    const updatedArray = removeElementById([...newData], dragTarget.id);
-    const dropObj = getElementById(updatedArray, dropTarget?.id || "");
-    if (!dropObj) return;
-    if (!dragObj) return;
-    if (dropObj.inner) {
-      dropObj.inner.push({ ...dragObj });
-    } else {
-      dropObj.inner = [
-        {
-          ...dragObj,
-        },
-      ];
-    }
-    if (updatedArray) {
-      setPageData(updatedArray);
-    }
-  };
+  //   const dragTarget = ev.target as HTMLElement;
+  //   const dropTarget = document.elementFromPoint(x, y);
+  //   const dragObj = getElementById(newData, dragTarget.id);
+  //   if (selectedID === dragTarget.id) return;
+  //   const updatedArray = removeElementById([...newData], dragTarget.id);
+  //   const dropObj = getElementById(updatedArray, dropTarget?.id || "");
+  //   if (!dropObj) return;
+  //   if (!dragObj) return;
+  //   if (dropObj.inner) {
+  //     dropObj.inner.push({ ...dragObj });
+  //   } else {
+  //     dropObj.inner = [
+  //       {
+  //         ...dragObj,
+  //       },
+  //     ];
+  //   }
+  //   if (updatedArray) {
+  //     setPageData(updatedArray);
+  //   }
+  // };
 
   useEffect(() => {
     // 바뀐 json을 렌더해주는 부분
-    if (isEmpty(pageData)) return;
-    parseElementsToHTML(pageData);
-  }, [pageData, currentPageName]);
+    if (!currentPageData) return;
+    parseElementsToHTML(currentPageData);
+  }, [currentPageData, currentPageName]);
 
   return (
     <div
@@ -253,7 +317,7 @@ export default function Provider({ children }: { children: React.ReactNode }) {
       onClick={getID}
       style={{ height: "100vh", width: "100vw" }}
       draggable={false}
-      onDragEnd={drop}
+      // onDragEnd={drop}
     >
       {children}
     </div>

@@ -30,10 +30,12 @@ export default function InsertTab() {
   const addElement = (ev: React.MouseEvent<HTMLButtonElement>) => {
     ev.preventDefault();
     const componentName = ev.currentTarget.id;
+    console.log(":::componentName", componentName);
     globalEmitter.emit("add", {
       type: componentName,
       props: PROPS_MAP[componentName as "nav" | "typo"],
     });
+    console.log(":::after");
   };
 
   const sendProps = (key: string, defaultValue: string) => {
