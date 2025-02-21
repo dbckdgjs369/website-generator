@@ -109,26 +109,25 @@ const PAGE_DATA: ComponentListType = new Map([
 ]);
 export default function TestPage() {
   // const { component } = useTemp({ pageID: "", componentID: "" });
-  const { useAddPage } = usePageHandler();
+  const { addPage } = usePageHandler();
   const { parseElementsToHTML } = useRender();
-  const addPage = useAddPage();
+  // const addPage = useAddPage();
 
   useEffect(() => {
     // 바뀐 json을 렌더해주는 부분
     parseElementsToHTML(PAGE_DATA);
   }, []);
   return (
-    <div
-      id="init"
-      style={{ height: "100vh", width: "100vw" }}
-      draggable={false}
-    >
-      <div>
-        <button onClick={() => addPage("test", new Map())}>addPage</button>
-        <button onClick={() => addPage("test1", new Map())}>addPage</button>
-        <button onClick={() => addPage("test2", new Map())}>addPage</button>
-        <button onClick={() => addPage("test3", new Map())}>addPage</button>
-      </div>
+    <div>
+      <div
+        id="init"
+        style={{ height: "100vh", width: "100vw" }}
+        draggable={false}
+      ></div>
+      <button onClick={() => addPage("test", new Map())}>addPage</button>
+      <button onClick={() => addPage("test1", new Map())}>addPage</button>
+      <button onClick={() => addPage("test2", new Map())}>addPage</button>
+      <button onClick={() => addPage("test3", new Map())}>addPage</button>
     </div>
   );
 }

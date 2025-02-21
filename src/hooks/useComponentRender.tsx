@@ -11,7 +11,12 @@ import NavigationBar, {
   NavigationBarType,
 } from "../componentList/NavigationBar";
 import Typo, { TypoType } from "../componentList/Typo";
-import { ElementStructure, Position, SelectedIDAtom } from "./atom";
+import {
+  ComponentListType,
+  ElementStructure,
+  Position,
+  SelectedIDAtom,
+} from "./atom";
 
 const COMPONENT_MAP = {
   nav: (props: NavigationBarType) => <NavigationBar {...props} />,
@@ -100,7 +105,7 @@ export default function useComponentRender() {
   };
 
   const parseElementsToHTML = (
-    elements: ElementStructure[],
+    elements: ComponentListType,
     mode: "edit" | "result"
   ) => {
     const container = document.getElementById("init");

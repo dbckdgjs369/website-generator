@@ -39,6 +39,25 @@ export default function usePageHandler() {
     });
   };
 
+  const addComponentToPage = (
+    pageID: string,
+    initialComponent: ComponentListType
+  ) => {
+    setPageList((prev) => {
+      const newPageList = new Map(prev);
+      const pageComponents = newPageList.get(pageID) || new Map();
+
+      // 새 컴포넌트 추가
+      pageComponents.set(
+        initialComponent.entries().next().value ?? "",
+        initialComponent
+      );
+
+      newPageList.set(pageID, pageComponents);
+      return newPageList;
+    });
+  };
+
   const deleteComponent = (pageID: string, componentID: string) => {
     setPageList((prev) => {
       const newPageList = new Map(prev);
@@ -87,6 +106,7 @@ export default function usePageHandler() {
     addComponent,
     updateComponent,
     deleteComponent,
+    addComponentToPage,
   };
 }
 

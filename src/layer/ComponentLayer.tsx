@@ -10,8 +10,7 @@ import { useGlobalEventEmitter } from "../provider/GlobalEventProvider/GlobalEve
 import { HTMLTag } from "../types";
 import { generateRandomString } from "../utils/utils";
 import useComponentRender from "../hooks/useComponentRender";
-import { Position } from "../hooks/useRender";
-import { SelectedIDAtom } from "../hooks/atom";
+import { Position, SelectedIDAtom } from "../hooks/atom";
 import usePageHandler from "../hooks/usePageHandler";
 
 export default function Componentlayer({
@@ -30,6 +29,7 @@ export default function Componentlayer({
     deleteComponent,
     deletePage,
     updateComponent,
+    addComponentToPage,
   } = usePageHandler();
   const currentPageData = pageData.get(currentPageName);
 
@@ -45,61 +45,52 @@ export default function Componentlayer({
       JSON.stringify({ type: selected?.type, props: selected?.props })
     );
   };
-
+  console.log("elementInfo");
   const handleAddElement = (elementInfo: {
     type: string;
     props: AllHTMLAttributes<keyof HTMLElementTagNameMap>;
   }) => {
     const { type, props } = elementInfo;
+    console.log(";::elementInfo", elementInfo);
     // addElement(name, selectedID);
-    addElement(type as keyof HTMLElementTagNameMap, props, "default");
+    addElement(type as keyof HTMLElementTagNameMap);
+  };
+  console.log("pageData", pageData);
+  const addElement = (addObjectTag: HTMLTag) => {
+    // id를 가진 요소에 object Tag를 추가해줌
+    addComponentToPage(
+      currentPageName,
+      new Map([
+        [
+          generateRandomString(10),
+          {
+            id: generateRandomString(10),
+            type: addObjectTag,
+            text: addObjectTag,
+          },
+        ],
+      ])
+    );
   };
 
-  const addElement = (
-    addObjectTag: HTMLTag,
-    props: object,
-    targetObjectID: string
-  ) => {
-    // id를 가진 요소에 object Tag를 추가해줌
-    if (isEmpty(pageData)) return;
-    const updatedPageData = [...pageData];
-    const foundObject = getElementById(updatedPageData, targetObjectID);
-    if (!foundObject) return;
-    if (foundObject.inner) {
-      foundObject.inner.push({
-        id: generateRandomString(10),
-        type: addObjectTag,
-        root: true,
-        props: { ...props },
-      });
-    } else {
-      foundObject.inner = [
-        {
-          id: generateRandomString(10),
-          type: addObjectTag,
-          text: addObjectTag,
-          root: true,
-          props: { ...props },
-        },
-      ];
-    }
-    setPageData(updatedPageData);
-  };
+  // const handlePosition = (pos: Position, id: string) => {
+  //   if (isEmpty(pageData)) return;
+  //   const updatedPageData = [...pageData];
+  //   const foundObject = getElementById(updatedPageData, id);
+  //   if (pos) {
+  //     const e = document.getElementById(id);
+  //     if (e) {
+  //       e.style["transform"] = `translate(${pos.x}px,${pos.y}px)`;
+  //     }
+  //   }
+  //   if (!foundObject) return;
+  //   foundObject.position = pos;
+
+  //   setPageData(updatedPageData);
+  // };
 
   const handlePosition = (pos: Position, id: string) => {
-    if (isEmpty(pageData)) return;
-    const updatedPageData = [...pageData];
-    const foundObject = getElementById(updatedPageData, id);
-    if (pos) {
-      const e = document.getElementById(id);
-      if (e) {
-        e.style["transform"] = `translate(${pos.x}px,${pos.y}px)`;
-      }
-    }
-    if (!foundObject) return;
-    foundObject.position = pos;
-
-    setPageData(updatedPageData);
+    updateComponent(currentPageName, id, { position: pos });
   };
   const handleFile = (name: string) => {
     switch (name) {
@@ -108,15 +99,15 @@ export default function Componentlayer({
         alert("저장에 성공했습니다!");
         break;
       }
-      case "load": {
-        const loadData = localStorage.getItem("pageJson");
-        if (loadData) {
-          const loadedData = JSON.parse(loadData);
-          setPageData(loadedData);
-        }
-        alert("페이지를 불러왔습니다.");
-        break;
-      }
+      // case "load": {
+      //   const loadData = localStorage.getItem("pageJson");
+      //   if (loadData) {
+      //     const loadedData = JSON.parse(loadData);
+      //     setPageData(loadedData);
+      //   }
+      //   alert("페이지를 불러왔습니다.");
+      //   break;
+      // }
     }
   };
 
@@ -132,25 +123,25 @@ export default function Componentlayer({
   // };
   const deleteElement = () => {
     if (isEmpty(pageData)) return;
-    if (selectedID === "default") return;
-    deleteComponent(currentPageName, selectedID);
-    setSelectedID("default");
+    if (selectedComponentID === "default") return;
+    deleteComponent(currentPageName, selectedComponentID);
+    setSelectedComponentID("");
   };
 
   const updateElement = (key: string, updatedProps: string) => {
     if (isEmpty(pageData)) return;
-    const updatedPageData = [...pageData];
-    const foundObject = getElementById(updatedPageData, selectedComponentID);
+    // const updatedPageData = [...pageData];
+    // const foundObject = getElementById(updatedPageData, selectedComponentID);
 
-    if (!foundObject) return;
-    if (foundObject?.props) {
-      foundObject.props[key] = updatedProps;
-    }
-    setPageData(updatedPageData);
+    // if (!foundObject) return;
+    // if (foundObject?.props) {
+    //   foundObject.props[key] = updatedProps;
+    // }
+    // setPageData(updatedPageData);
   };
 
   useEffect(() => {
-    if (isEmpty(pageData)) return;
+    // if (isEmpty(pageData)) return;
     globalEmitter.on("add", handleAddElement);
     globalEmitter.on("position", handlePosition);
     globalEmitter.on("file", handleFile);
@@ -176,9 +167,9 @@ export default function Componentlayer({
 
   useEffect(() => {
     // 바뀐 json을 렌더해주는 부분
-    if (isEmpty(pageData)) return;
-    parseElementsToHTML(pageData, "edit");
-  }, [pageData, currentPageName, selectedComponentID]);
+    if (!currentPageData) return;
+    parseElementsToHTML(currentPageData, "edit");
+  }, [currentPageData, currentPageName]);
 
   console.log("::pageData", pageData);
   return (
